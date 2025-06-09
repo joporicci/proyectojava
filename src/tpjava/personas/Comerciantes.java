@@ -1,8 +1,19 @@
 package tpjava.personas;
+import tpjava.zonas.Festival;
+import tpjava.zonas.ZonaRestringida;
+import tpjava.excepciones.ExcepcionStandNoExiste;
 
 public class Comerciantes extends Personas{  /* NUM: 3 */
-	public Comerciantes(String id, String name) {
+	public Comerciantes(String id, String name, ZonaRestringida... zonasRestr) {
 		super(id,name);
-		configurar_Credencial(TIPO_PERSONA.COMERCIANTE);
+		try {
+		    obtenerListaZonas().add(Festival.devolver_Stand(this));
+		    /* DESARROLLAR PARA AÑADIR ZONAS RESTRINGIDAS */
+		}
+		catch(ExcepcionStandNoExiste e) {
+			System.err.println("Error al buscar Stand de comerciante: " + e);			
+		}
 	}
 }
+
+

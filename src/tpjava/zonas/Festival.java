@@ -1,9 +1,11 @@
 package tpjava.zonas;
 import java.util.ArrayList;
+
 import java.util.Iterator;
 import java.util.TreeSet;
 import tpjava.personas.*;
 import tpjava.zonas.Zona.NUMERO_ZONA;
+import tpjava.excepciones.*;
 
 public class Festival {  /* Clase manejadora de zonas & personas */
 	static private TreeSet<Zona> setZonas; /* Almacena las zonas, orden ascendente */
@@ -18,67 +20,48 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 	public void agregar_Persona(String id, String name) {
 		setPersonas.add(new Personas(id,name));
 	}
-	public static String devolver_Escenario(String artista) {  /* Devuelve el codigo alfanumerico del escenario de ese artista */
+	
+	public static Escenario devolver_Escenario(String artista) throws ExcepcionEscenarioNoExiste {  /* Devuelve la referencia al escenario de ese artista */
 		Iterator<Zona> iterador = setZonas.iterator();
 		Zona aux = setZonas.first();
 		boolean seEncontro = false;
-		final char tipoEscenario = (char)(NUMERO_ZONA.ESCENARIO.ordinal() + '0');  /* Constante para no llamar a .ordinal() cada ciclo del while. */
-		while(iterador.hasNext() && aux.obtener_codigo().charAt(0) != tipoEscenario) {
-			aux = iterador.next();			
-		}
-		if(aux.obtener_codigo().charAt(0) == tipoEscenario)
-			while(iterador.hasNext() && aux.obtener_codigo().charAt(0) == tipoEscenario && !seEncontro) {
-				if(aux instanceof Escenario)
-					seEncontro = ((Escenario) aux).estaArtista(artista);
+		while(iterador.hasNext() && !seEncontro) {
+			if(aux instanceof Escenario) {
+				if(((Escenario) aux).estaArtista(artista))
+					seEncontro = true;
 				else
 					aux = iterador.next();
 			}
-		return seEncontro ? aux.obtener_codigo() : "NO EXISTE";
-	}
-	public static void devolver_Zonas(NUMERO_ZONA tipoEnum, ArrayList<String> lZonas) { /* tipo: ESC, ZC, ZR, STAND. */
-		final char tipo = (char)(tipoEnum.ordinal() + '0');
-		Iterator<Zona> iterador = setZonas.iterator();
-		String aux = setZonas.first().obtener_codigo();
-		if(aux.charAt(0) != tipo) {
-		    while(iterador.hasNext() && aux.charAt(0) != tipo) {  /* NOTA: Chequear por ineficiencia antes de entregar. */
-			    aux = iterador.next().obtener_codigo();
-		    }
-			if(aux.charAt(0) == tipo) {
-				lZonas.add(aux);
-				while(iterador.hasNext() && aux.charAt(0) == tipo) {
-					aux = iterador.next().obtener_codigo();					
-				    lZonas.add(aux);
-				}
-			}
 		}
-		else {
-		    lZonas.add(aux);
-		    while(iterador.hasNext() && aux.charAt(0) == tipo)
-		    	aux = iterador.next().obtener_codigo();
-			    lZonas.add(aux);
-		}
+		if (seEncontro)
+			return (Escenario)aux;
+		else
+			throw new ExcepcionEscenarioNoExiste("No se encontro escenario alguno en el que el artista actue.");
 	}
-	public static void devolver_TODAS_Zonas(ArrayList<String> lZonas) {
+	
+	
+	public static void devolver_TODAS_Zonas(ArrayList<Zona> lZonas) {
 		for(Zona zonaActual : setZonas) {
-			lZonas.add(zonaActual.obtener_codigo());
+			lZonas.add(zonaActual);
 		}
 	}
-	public static String devolver_Stand(String comerciante) {
-		final char tipoStand = (char)(NUMERO_ZONA.STAND.ordinal() + '0');
+	
+	public static Stand devolver_Stand(Comerciantes comerciante) throws ExcepcionStandNoExiste {
 		Iterator<Zona> iterador = setZonas.iterator();
 		Zona aux = setZonas.first();
 		boolean seEncontro = false;
-		if(aux.obtener_codigo().charAt(0) != tipoStand) {
-			while(iterador.hasNext() && aux.obtener_codigo().charAt(0) != tipoStand)
+		if(aux instanceof Stand)
+			seEncontro = ((Stand) aux).estaComerciante(comerciante);
+		while(iterador.hasNext() && !seEncontro) {
+			if(aux instanceof Stand)
+				seEncontro = ((Stand) aux).estaComerciante(comerciante);
+			else
 				aux = iterador.next();
-			if(aux.obtener_codigo().charAt(0) == tipoStand) {
-				while(iterador.hasNext() && aux.obtener_codigo().charAt(0) == tipoStand && !seEncontro)
-					if(aux instanceof Stand)
-						seEncontro = ((Stand) aux).estaComerciante(comerciante);
-					else
-						aux = iterador.next();
-			}
 		}
-		return seEncontro ? aux.obtener_codigo() : "NO EXISTE";
+		if(!seEncontro)
+			throw new ExcepcionStandNoExiste("El comerciante ingresado no posee un Stand existente!");
+		else
+			return (Stand)aux;
+			
 	}
 }

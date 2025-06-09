@@ -2,6 +2,7 @@ package tpjava.zonas;
 import tpjava.misc.EventoMusical;
 import java.util.TreeSet;
 import java.util.Iterator;
+import tpjava.personas.Artistas;
 
 public class Escenario extends Zona {
 	private TreeSet<EventoMusical> setEventos;
@@ -11,11 +12,15 @@ public class Escenario extends Zona {
 		setEventos = new TreeSet<>();
 	}
 	/* Desarrollar metodo para agregar eventos. */
-	public boolean estaArtista(String artista) {
+	public boolean estaArtista(Artistas artista) {
 		Iterator<EventoMusical> iterador = setEventos.iterator();
 		EventoMusical auxActual = setEventos.first();
-		while(iterador.hasNext() && auxActual.obtener_Artista().equals(artista))
-			auxActual = iterador.next();
-		return auxActual.obtener_Artista().equals(artista);
+		boolean seEncontro = false;
+		while(iterador.hasNext() && !seEncontro) {
+			seEncontro = auxActual.obtener_Artista().equals(artista);
+			
+		}
+			
+		return seEncontro;
 	}
 }

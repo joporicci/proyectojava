@@ -1,19 +1,21 @@
 package tpjava.personas;
 
+import java.util.ArrayList;
+import tpjava.zonas.Zona;
+
 public class Personas {
-	public enum TIPO_PERSONA{
-		ASISTENTE,
-		ARTISTA,
-		STAFF,
-		COMERCIANTE
-	}
-	private Credencial credencial;
+	private String ID, nombre;
+	private ArrayList<Acceso> listaAccesos;
+	private ArrayList<Zona> listaZonasAccesibles;
 	public Personas(String id, String name) {
-		credencial = new Credencial(id,name);
-	}
-	public void configurar_Credencial(TIPO_PERSONA tp) {
-		credencial.configurar_Credencial(tp);
+		ID = id;
+		nombre = name;
+		listaAccesos = new ArrayList<Acceso>();
+		listaZonasAccesibles = new ArrayList<Zona>(); 
+		/* Las zonas comunes no se añaden porque es redundante, todos pueden acceder */
 	}
 	
-	
+	public ArrayList<Zona> obtenerListaZonas(){
+		return listaZonasAccesibles;
+	}
 }
