@@ -14,4 +14,6 @@ public class Personas {
 	public void configurar_Credencial(TIPO_PERSONA tp) {
 		credencial.configurar_Credencial(tp);
 	}
+	
+	
 }

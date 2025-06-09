@@ -38,4 +38,10 @@ public class Credencial {
 	public void agregar_Acceso(String z, String f, String h, float cm, boolean status) {
 		listaAccesos.add(new Acceso(z,f,h,cm,status));
 	}
+	public void recorrer_Accesos() {
+		int i;
+		for (i=0; i<listaAccesos.size(); i++) {
+			
+		}
+	}
 }

@@ -11,4 +11,5 @@ public class Acceso {
 		cantidad_minutos = cm;
 		estado = status;
 	}
+	
 }
