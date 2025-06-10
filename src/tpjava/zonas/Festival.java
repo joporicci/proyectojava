@@ -4,26 +4,25 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
 import tpjava.personas.*;
-import tpjava.zonas.Zona.NUMERO_ZONA;
 import tpjava.excepciones.*;
 
 public class Festival {  /* Clase manejadora de zonas & personas */
-	static private TreeSet<Zona> setZonas; /* Almacena las zonas, orden ascendente */
-	static private TreeSet<Personas> setPersonas; /* Almacena las personas, orden ascendente */
+	static private ArrayList<Zona> listaZonas; /* Almacena las zonas, orden ascendente */
+	static private ArrayList<Personas> listaPersonas; /* Almacena las personas, orden ascendente */
 	public Festival() {
-		setZonas = new TreeSet<>();
-		setPersonas = new TreeSet<>(); 
+		listaZonas = new ArrayList<>();
+		listaPersonas = new ArrayList<>(); 
 	}
 	public void agregar_Zona(String cod, String desc) {
-		setZonas.add(new Zona(cod,desc));
+		listaZonas.add(new Zona(cod,desc));
 	}
 	public void agregar_Persona(String id, String name) {
-		setPersonas.add(new Personas(id,name));
+		listaPersonas.add(new Personas(id,name));
 	}
 	
-	public static Escenario devolver_Escenario(String artista) throws ExcepcionEscenarioNoExiste {  /* Devuelve la referencia al escenario de ese artista */
-		Iterator<Zona> iterador = setZonas.iterator();
-		Zona aux = setZonas.first();
+	public static Escenario devolver_Escenario(Artistas artista) throws ExcepcionEscenarioNoExiste {  /* Devuelve la referencia al escenario de ese artista */
+		Iterator<Zona> iterador = listaZonas.iterator();
+		Zona aux = listaZonas.getFirst();
 		boolean seEncontro = false;
 		while(iterador.hasNext() && !seEncontro) {
 			if(aux instanceof Escenario) {
@@ -40,15 +39,18 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 	}
 	
 	
-	public static void devolver_TODAS_Zonas(ArrayList<Zona> lZonas) {
-		for(Zona zonaActual : setZonas) {
-			lZonas.add(zonaActual);
+	public static ArrayList<Zona> devolver_TODAS_Zonas() {  /* Añade todas las zonas no comunes. */
+		ArrayList<Zona> lZonas = new ArrayList<>(); 
+		for(Zona zonaActual : listaZonas) {
+			if(!(zonaActual instanceof ZonaComun))
+			    lZonas.add(zonaActual);
 		}
+		return lZonas;
 	}
 	
 	public static Stand devolver_Stand(Comerciantes comerciante) throws ExcepcionStandNoExiste {
-		Iterator<Zona> iterador = setZonas.iterator();
-		Zona aux = setZonas.first();
+		Iterator<Zona> iterador = listaZonas.iterator();
+		Zona aux = listaZonas.getFirst();
 		boolean seEncontro = false;
 		if(aux instanceof Stand)
 			seEncontro = ((Stand) aux).estaComerciante(comerciante);
@@ -63,5 +65,13 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 		else
 			return (Stand)aux;
 			
+	}
+	
+	public static ArrayList<Escenario> devolver_ListaEscenarios() {
+		ArrayList<Escenario> listaEscenarios = new ArrayList<>();
+		for(Zona zonaActual : listaZonas)
+			if(zonaActual instanceof Escenario)
+				listaEscenarios.add((Escenario)zonaActual);
+		return listaEscenarios;
 	}
 }

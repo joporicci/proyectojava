@@ -1,8 +1,18 @@
 package tpjava.personas;
+import tpjava.zonas.ZonaRestringida;
+import tpjava.zonas.Festival;
+import tpjava.excepciones.ExcepcionEscenarioNoExiste;
 
 public class Artistas extends Personas{  /* NUM: 1 */
-	public Artistas(String id, String name) {
+	public Artistas(String id, String name, ZonaRestringida... zonasRestr) {
 		super(id,name);
-		configurar_Credencial(TIPO_PERSONA.ARTISTA);
+		try {
+			obtenerListaZonas().add(Festival.devolver_Escenario(this));
+		}
+		catch(ExcepcionEscenarioNoExiste e) {
+			System.err.println("Error al buscar escenario del artista: " + e);
+		}
+		for(ZonaRestringida zonaActual : zonasRestr) 
+			obtenerListaZonas().add(zonaActual);
 	}
 }

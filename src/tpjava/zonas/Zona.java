@@ -5,12 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Zona {
-	public enum NUMERO_ZONA{
-		ESCENARIO,
-		ZONA_COMUN,
-		ZONA_RESTRINGIDA,
-		STAND
-	}
 	private static TreeSet<String> listaZonas = new TreeSet<>(); 
 	private String codigoAlfanumerico, descripcion;
 	public Zona(String cod, String desc) {
