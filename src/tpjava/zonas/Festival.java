@@ -1,7 +1,9 @@
 package tpjava.zonas;
 import java.util.ArrayList;
 import java.util.Iterator;
-import tpjava.personas.*;
+import tpjava.personas.Personas;
+import tpjava.personas.Artistas;
+import tpjava.personas.Comerciantes;
 import tpjava.excepciones.*;
 
 public class Festival {  /* Clase manejadora de zonas & personas */

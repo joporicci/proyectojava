@@ -1,13 +1,18 @@
 package tpjava.misc;
+import tpjava.personas.Artistas;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class EventoMusical {
-	String fecha, hora, artista;
-	public EventoMusical(String f, String h, String a) {
+	LocalDate fecha;
+	LocalTime hora;
+	Artistas artista;
+	public EventoMusical(LocalDate f, LocalTime h, Artistas a) {
 		fecha = f;
 		hora = h;
 		artista = a;
 	}
-	public String obtener_Artista() {
+	public Artistas obtener_Artista() {
 		return artista;
 	}
 }
