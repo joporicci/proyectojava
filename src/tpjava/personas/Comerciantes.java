@@ -16,6 +16,8 @@ public class Comerciantes extends Personas{  /* NUM: 3 */
 		for(ZonaRestringida zona : zonasRestr) /* Añade las zonas restringidas determinadas. */
 	    	obtenerListaZonas().add((Zona)zona);
 	}
+	
+	/* El equals de la clase base se hereda automáticamente. */
 }
 
 

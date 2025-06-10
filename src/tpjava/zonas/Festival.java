@@ -1,8 +1,6 @@
 package tpjava.zonas;
 import java.util.ArrayList;
-
 import java.util.Iterator;
-import java.util.TreeSet;
 import tpjava.personas.*;
 import tpjava.excepciones.*;
 

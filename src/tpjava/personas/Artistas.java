@@ -15,4 +15,6 @@ public class Artistas extends Personas{  /* NUM: 1 */
 		for(ZonaRestringida zonaActual : zonasRestr) 
 			obtenerListaZonas().add(zonaActual);
 	}
+	
+	/* El equals de la clase base se hereda automáticamente. */
 }

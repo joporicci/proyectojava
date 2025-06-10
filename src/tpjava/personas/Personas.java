@@ -1,7 +1,10 @@
 package tpjava.personas;
 
 import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import tpjava.zonas.Zona;
+
 
 public class Personas {
 	private String ID, nombre;
@@ -17,5 +20,21 @@ public class Personas {
 	
 	public ArrayList<Zona> obtenerListaZonas(){
 		return listaZonasAccesibles;
+	}
+	
+	public String obtenerID() {
+		return ID;
+	}
+	
+	public void agregarAcceso(String zona, LocalDate fecha, LocalTime hora, float cantMins, boolean estado) {
+		listaAccesos.add(new Acceso(zona,fecha,hora,cantMins,estado));
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null || o.getClass() != getClass())
+			return false;
+		else
+			return ID.equals(((Personas)o).ID);
 	}
 }
