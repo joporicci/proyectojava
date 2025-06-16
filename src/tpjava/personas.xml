@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<personas>
+<persona tipo="artista" id="ART001" nombre="Juan Pérez">
+    <zonaAcceso codigo="R010" />
+    <zonaAcceso codigo="R008" />
+    <zonaAcceso codigo="E001" />
+  </persona>
+  <persona tipo="artista" id="ART002" nombre="Laura Gómez">
+    <zonaAcceso codigo="R010" />
+    <zonaAcceso codigo="E001" />
+  </persona>
+  <persona tipo="artista" id="ART003" nombre="Pedro Martínez">
+    <zonaAcceso codigo="R003" />
+    <zonaAcceso codigo="R004" />
+    <zonaAcceso codigo="E002" />
+  </persona>
+  <persona tipo="artista" id="ART004" nombre="Sofía Díaz">
+    <zonaAcceso codigo="R004" />
+    <zonaAcceso codigo="E002" />
+  </persona>
+  <persona tipo="artista" id="ART005" nombre="Carlos Ramírez">
+    <zonaAcceso codigo="R005" />
+    <zonaAcceso codigo="R001" />
+    <zonaAcceso codigo="E003" />
+  </persona>
+  <persona tipo="artista" id="ART006" nombre="Martina López">
+    <zonaAcceso codigo="R013" />
+    <zonaAcceso codigo="E003" />
+  </persona>
+  <persona tipo="artista" id="ART007" nombre="Diego Torres">
+    <zonaAcceso codigo="R003" />
+    <zonaAcceso codigo="R004" />
+    <zonaAcceso codigo="E004" />
+  </persona>
+  <persona tipo="artista" id="ART008" nombre="Lucía Fernández">
+    <zonaAcceso codigo="R008" />
+    <zonaAcceso codigo="E005" />
+  </persona>
+  <persona tipo="artista" id="ART009" nombre="Ricardo Sánchez">
+    <zonaAcceso codigo="R009" />
+    <zonaAcceso codigo="R001" />
+    <zonaAcceso codigo="E006" />
+  </persona>
+  <persona tipo="artista" id="ART010" nombre="Camila Morales">
+    <zonaAcceso codigo="R001" />
+    <zonaAcceso codigo="E007" />
+  </persona>
+  <persona tipo="artista" id="ART011" nombre="Tomás Ruiz">
+    <zonaAcceso codigo="R001" />
+    <zonaAcceso codigo="R003" />
+    <zonaAcceso codigo="E008" />
+  </persona>
+  <persona tipo="asistente" id="ASI001" nombre="Ana Ruiz" />
+  <persona tipo="asistente" id="ASI002" nombre="Luis Fernández" />
+  <persona tipo="asistente" id="ASI003" nombre="María Torres" />
+  <persona tipo="asistente" id="ASI004" nombre="Javier Morales" />
+  <persona tipo="asistente" id="ASI005" nombre="Marta González" />
+  <persona tipo="asistente" id="ASI006" nombre="Pablo Sánchez" />
+  <persona tipo="asistente" id="ASI007" nombre="Elena Flores" />
+  <persona tipo="asistente" id="ASI008" nombre="Ramón Pérez" />
+  <persona tipo="asistente" id="ASI009" nombre="Isabel Gómez" />
+  <persona tipo="asistente" id="ASI010" nombre="Diego Martínez" />
+  <persona tipo="asistente" id="ASI011" nombre="Clara Rodríguez" />
+  <persona tipo="asistente" id="ASI012" nombre="Joaquín Fernández" />
+  <persona tipo="asistente" id="ASI013" nombre="Lorena Díaz" />
+  <persona tipo="asistente" id="ASI014" nombre="Raúl González" />
+  <persona tipo="asistente" id="ASI015" nombre="Victoria Sánchez" />
+  <persona tipo="comerciante" id="COM001" nombre="Ana Ruiz">
+    <zonaAcceso codigo="S001" />
+  </persona>
+  <persona tipo="comerciante" id="COM002" nombre="Luis Fernández">
+    <zonaAcceso codigo="S002" />
+    <zonaAcceso codigo="R006" />
+  </persona>
+  <persona tipo="comerciante" id="COM003" nombre="María Torres">
+    <zonaAcceso codigo="S003" />
+  </persona>
+  <persona tipo="comerciante" id="COM004" nombre="Javier Morales">
+    <zonaAcceso codigo="S004" />
+  </persona>
+  <persona tipo="comerciante" id="COM005" nombre="Marta González">
+    <zonaAcceso codigo="S005" />
+    <zonaAcceso codigo="R009" />
+  </persona>
+  <persona tipo="comerciante" id="COM006" nombre="Pablo Sánchez">
+    <zonaAcceso codigo="S006" />
+  </persona>
+  <persona tipo="comerciante" id="COM007" nombre="Elena Flores">
+    <zonaAcceso codigo="S007" />
+    <zonaAcceso codigo="R009" />
+  </persona>
+  <persona tipo="comerciante" id="COM008" nombre="Ramón Pérez">
+    <zonaAcceso codigo="S008" />
+  </persona>
+  <persona tipo="comerciante" id="COM009" nombre="Isabel Gómez">
+    <zonaAcceso codigo="S009" />
+  </persona>
+  <persona tipo="comerciante" id="COM010" nombre="Diego Martínez">
+    <zonaAcceso codigo="S010" />
+  </persona>
+  <persona tipo="staff" id="STA001" nombre="Marcos López"/>
+  <persona tipo="staff" id="STA002" nombre="Valeria Mendoza"/>
+  <persona tipo="staff" id="STA003" nombre="Gustavo Ríos"/>
+  <persona tipo="staff" id="STA004" nombre="Andrea Gómez"/>
+  <persona tipo="staff" id="STA005" nombre="Jorge Fernández"/>
+  <persona tipo="staff" id="STA006" nombre="Lucía Pérez"/>
+  <persona tipo="staff" id="STA007" nombre="Diego Morales"/>
+  <persona tipo="staff" id="STA008" nombre="Sofía Herrera"/>
+  <persona tipo="staff" id="STA009" nombre="Ramón Castro"/>
+  <persona tipo="staff" id="STA010" nombre="Carolina Díaz"/>
+</personas>  

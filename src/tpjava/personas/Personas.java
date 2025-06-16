@@ -37,4 +37,13 @@ public class Personas {
 		else
 			return ID.equals(((Personas)o).ID);
 	}
+	private Persona buscarPersonaPorID(String id) {
+	    for (Persona p : festival.getPersonas()) {
+	        if (p.getId().equals(id)) {
+	            return p;
+	        }
+	    }
+	    return null;
+	}
+
 }
