@@ -1,4 +1,4 @@
-package tpjava.personas;
+ package tpjava.personas;
 
 public class Artistas extends Personas{  /* NUM: 1 */
 	public Artistas(String id, String name) {
