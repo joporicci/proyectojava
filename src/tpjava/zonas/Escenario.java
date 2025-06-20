@@ -23,4 +23,9 @@ public class Escenario extends Zona {
 			
 		return seEncontro;
 	}
+	
+	public void listar_EventosProgramados() {
+		for(EventoMusical eventoActual : setEventos)
+			System.out.println(eventoActual.toString());
+	}
 }

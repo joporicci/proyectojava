@@ -15,4 +15,9 @@ public class EventoMusical {
 	public Artistas obtener_Artista() {
 		return artista;
 	}
+	
+	@Override
+	public String toString() {
+		return "FECHA: " + fecha.toString() + "\tHORA: " + hora.toString() +  "\tARTISTA: " + artista.toString();  
+	}
 }

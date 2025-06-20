@@ -6,4 +6,9 @@ public class Zona {
 		codigoAlfanumerico = cod;
 		descripcion = desc;
 	}
+	@Override
+	public String toString() {
+		return "CODIGO ALFANUMERICO: " + codigoAlfanumerico + "   DESCRIPCION: " + descripcion;
+	}
+	
 }

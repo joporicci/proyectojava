@@ -16,5 +16,9 @@ public class Artistas extends Personas{  /* NUM: 1 */
 			obtenerListaZonas().add(zonaActual);
 	}
 	
+	@Override
+	public String toString() {
+		return obtenerNombre();
+	}
 	/* El equals de la clase base se hereda automáticamente. */
 }
