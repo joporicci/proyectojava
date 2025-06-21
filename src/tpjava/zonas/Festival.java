@@ -1,22 +1,19 @@
 package tpjava.zonas;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import tpjava.personas.Personas;
-import tpjava.personas.Acceso;
 import tpjava.personas.Artistas;
 import tpjava.personas.Comerciantes;
 import tpjava.zonas.Stand;
 import tpjava.excepciones.*;
 
 public class Festival {  /* Clase manejadora de zonas & personas */
-	static private HashMap<Zona, Integer> mapaZonas; /* Almacena TODAS las zonas + cantidad de gente que almacena c/u */
+	static private HashMap<Zona, Integer> mapaZonas; /* Almacena TODAS las zonas + cantidad de gente que tiene c/u */
 	static private ArrayList<Escenario> listaEscenarios; /* Almacena solo los escenarios, para no tener que buscarlos cada vez que se inicializa un Asistente/Artista */
 	static private ArrayList<Stand> listaStands; /* Almacena solo los Stands, para no tener que buscarlos cada vez que se inicializa un Comerciante */
 	static private ArrayList<Personas> listaPersonas; /* Almacena las personas */
@@ -106,7 +103,7 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 		int cantTotalPersonas = 0;
 		/* Como los TreeMap ordenan por Key y no por valores, creamos y ordenamos una lista de Entrys. */
 		ArrayList<Map.Entry<Zona, Integer>> listaEntradasZonas = new ArrayList<>(mapaZonas.entrySet());
-		listaEntradasZonas.sort(Map.Entry.<Zona, Integer>comparingByValue().reversed()); // Ordenamos cada entrada descendentemente (por eso lo revertimos) según su concurrencia.
+		listaEntradasZonas.sort(Map.Entry.<Zona, Integer>comparingByValue().reversed()); // Ordenamos cada entrada descendentemente (por eso lo revertimos) comparandolas según su concurrencia.
 		for(Map.Entry<Zona, Integer> entradaActual : listaEntradasZonas) {
 			cantTotalPersonas += entradaActual.getValue();
 			System.out.println(entradaActual.getKey());
