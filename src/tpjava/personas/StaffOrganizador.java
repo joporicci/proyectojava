@@ -1,8 +1,10 @@
 package tpjava.personas;
 
+import tpjava.zonas.Festival;
+
 public class StaffOrganizador extends Personas{  /* NUM: 2 */
 	public StaffOrganizador(String id, String name) {
 		super(id,name);
-		configurar_Credencial(TIPO_PERSONA.STAFF);
+		obtenerListaZonas().addAll(Festival.devolver_TODAS_Zonas()); /* Añade todas las zonas como accesibles a la lista del Staff */
 	}
 }

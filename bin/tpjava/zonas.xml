@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zonas>
+  <zona tipo="comun" codigo="C001" descripcion="Zona Peatonal Norte"/>
+  <zona tipo="comun" codigo="C002" descripcion="Zona Peatonal Sur"/>
+  <zona tipo="comun" codigo="C003" descripcion="Zona de Descanso"/>
+  <zona tipo="comun" codigo="C004" descripcion="Zona de Entrada"/>
+  <zona tipo="comun" codigo="C005" descripcion="Zona de Servicios"/>
+  <zona tipo="comun" codigo="C006" descripcion="Zona de Primeros Auxilios"/>
+  <zona tipo="comun" codigo="C007" descripcion="Zona de Baños"/>
+  <zona tipo="comun" codigo="C008" descripcion="Zona de Seguridad"/>
+  <zona tipo="comun" codigo="C009" descripcion="Zona Familiar"/>
+  <zona tipo="comun" codigo="C010" descripcion="Zona de Estacionamiento"/>
+  <zona tipo="comun" codigo="C011" descripcion="Zona de Juegos"/>
+  <zona tipo="comun" codigo="C012" descripcion="Zona de Comercios"/>
+  <zona tipo="comun" codigo="C013" descripcion="Zona de Información"/>
+  <zona tipo="comun" codigo="C014" descripcion="Zona de Acceso VIP"/>
+  <zona tipo="comun" codigo="C015" descripcion="Zona de Medios"/>
+  <zona tipo="comun" codigo="C016" descripcion="Zona de Comidas"/>
+  <zona tipo="comun" codigo="C017" descripcion="Zona de Salida"/>
+  <zona tipo="comun" codigo="C018" descripcion="Zona de Bebidas"/>
+  <zona tipo="comun" codigo="C019" descripcion="Zona de Recreacion"/>
+  <zona tipo="comun" codigo="C020" descripcion="Zona de Servicio Técnico"/>
+  
+  <zona tipo="escenario" codigo="E001" descripcion="Escenario Principal" capacidadMaxima="2000">
+    <eventoMusical fecha="2025-06-14" hora="18:00" artistaID="ART001"/>
+    <eventoMusical fecha="2025-06-14" hora="20:00" artistaID="ART002"/>
+  </zona>
+  <zona tipo="escenario" codigo="E002" descripcion="Escenario Secundario" capacidadMaxima="1500">
+    <eventoMusical fecha="2025-06-15" hora="17:00" artistaID="ART003"/>
+    <eventoMusical fecha="2025-06-15" hora="19:00" artistaID="ART004"/>
+  </zona>
+  <zona tipo="escenario" codigo="E003" descripcion="Escenario Acústico" capacidadMaxima="500">
+    <eventoMusical fecha="2025-06-16" hora="16:00" artistaID="ART005"/>
+    <eventoMusical fecha="2025-06-16" hora="18:00" artistaID="ART006"/>
+  </zona>
+  <zona tipo="escenario" codigo="E004" descripcion="Escenario Electrónico" capacidadMaxima="800">
+    <eventoMusical fecha="2025-06-17" hora="22:00" artistaID="ART007"/>
+  </zona>
+  <zona tipo="escenario" codigo="E005" descripcion="Escenario Jazz" capacidadMaxima="600">
+    <eventoMusical fecha="2025-06-18" hora="19:30" artistaID="ART008"/>
+  </zona>
+  <zona tipo="escenario" codigo="E006" descripcion="Escenario Rock" capacidadMaxima="1200">
+    <eventoMusical fecha="2025-06-19" hora="21:00" artistaID="ART009"/>
+  </zona>
+  <zona tipo="escenario" codigo="E007" descripcion="Escenario Clásico" capacidadMaxima="700">
+    <eventoMusical fecha="2025-06-20" hora="19:00" artistaID="ART010"/>
+  </zona>
+  <zona tipo="escenario" codigo="E008" descripcion="Escenario Pop" capacidadMaxima="1300">
+    <eventoMusical fecha="2025-06-21" hora="20:30" artistaID="ART011"/>
+  </zona>
+  <zona tipo="escenario" codigo="E009" descripcion="Escenario Indie" capacidadMaxima="900"/>
+  <zona tipo="escenario" codigo="E010" descripcion="Escenario Folk" capacidadMaxima="800"/>
+  
+  <zona tipo="restringida" codigo="R001" descripcion="Backstage" capacidadMaxima="100"/>
+  <zona tipo="restringida" codigo="R002" descripcion="Zona Staff" capacidadMaxima="80"/>
+  <zona tipo="restringida" codigo="R003" descripcion="Zona de Equipos" capacidadMaxima="60"/>
+  <zona tipo="restringida" codigo="R004" descripcion="Zona VIP" capacidadMaxima="120"/>
+  <zona tipo="restringida" codigo="R005" descripcion="Zona de Control" capacidadMaxima="50"/>
+  <zona tipo="restringida" codigo="R006" descripcion="Zona de Carga" capacidadMaxima="70"/>
+  <zona tipo="restringida" codigo="R007" descripcion="Zona Técnica" capacidadMaxima="90"/>
+  <zona tipo="restringida" codigo="R008" descripcion="Zona de Seguridad" capacidadMaxima="110"/>
+  <zona tipo="restringida" codigo="R009" descripcion="Zona de Almacenamiento" capacidadMaxima="40"/>
+  <zona tipo="restringida" codigo="R010" descripcion="Zona de Prensa" capacidadMaxima="30"/>
+  <zona tipo="restringida" codigo="R011" descripcion="Zona de Emergencia" capacidadMaxima="55"/>
+  <zona tipo="restringida" codigo="R012" descripcion="Zona de Control de Acceso" capacidadMaxima="45"/>
+  <zona tipo="restringida" codigo="R013" descripcion="Zona de Producción" capacidadMaxima="65"/>
+  <zona tipo="restringida" codigo="R014" descripcion="Zona de Mantenimiento" capacidadMaxima="35"/>
+  <zona tipo="restringida" codigo="R015" descripcion="Zona de Catering" capacidadMaxima="40"/>
+  
+  <zona tipo="stand" codigo="S001" descripcion="Stand de Comida 1" capacidadMaxima="15" id="ST001" ubicacion="Zona de Comidas" comercianteID="COM001"/>
+  <zona tipo="stand" codigo="S002" descripcion="Stand de Bebidas 1" capacidadMaxima="10" id="ST002" ubicacion="Zona de Bebidas" comercianteID="COM002"/>
+  <zona tipo="stand" codigo="S003" descripcion="Stand de Merchandising" capacidadMaxima="20" id="ST003" ubicacion="Zona de Entrada" comercianteID="COM003"/>
+  <zona tipo="stand" codigo="S004" descripcion="Stand de Souvenirs" capacidadMaxima="12" id="ST004" ubicacion="Zona de Salida" comercianteID="COM004"/>
+  <zona tipo="stand" codigo="S005" descripcion="Stand de Ropa" capacidadMaxima="18" id="ST005" ubicacion="Zona de Comercios" comercianteID="COM005"/>
+  <zona tipo="stand" codigo="S006" descripcion="Stand de Tecnología" capacidadMaxima="22" id="ST006" ubicacion="Zona de Servicio Tecnico" comercianteID="COM006"/>
+  <zona tipo="stand" codigo="S007" descripcion="Stand de Libros" capacidadMaxima="14" id="ST007" ubicacion="Zona de Comercios" comercianteID="COM007"/>
+  <zona tipo="stand" codigo="S008" descripcion="Stand de Arte" capacidadMaxima="16" id="ST008" ubicacion="Zona Recreacion" comercianteID="COM008"/>
+  <zona tipo="stand" codigo="S009" descripcion="Stand de Juguetes" capacidadMaxima="15" id="ST009" ubicacion="Zona de Juegos" comercianteID="COM009"/>
+  <zona tipo="stand" codigo="S010" descripcion="Stand de Regalos" capacidadMaxima="20" id="ST010" ubicacion="Zona de Comercios" comercianteID="COM010"/>
+</zonas>

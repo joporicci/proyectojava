@@ -1,8 +1,19 @@
- package tpjava.personas;
+
+
+package tpjava.personas;
+import tpjava.excepciones.ExcepcionEscenarioNoExiste;
+import tpjava.zonas.Festival;
+import tpjava.zonas.ZonaRestringida;
+
 
 public class Artistas extends Personas{  /* NUM: 1 */
-	public Artistas(String id, String name) {
+	public Artistas(String id, String name, ZonaRestringida... zonasRestr) throws tpjava.personas.ExcepcionEscenarioNoExiste, ExcepcionEscenarioNoExiste {
 		super(id,name);
-		configurar_Credencial(TIPO_PERSONA.ARTISTA);
+		obtenerListaZonas().add(Festival.devolver_Escenario(this));
+		for(ZonaRestringida zonaActual : zonasRestr) 
+			obtenerListaZonas().add(zonaActual);
 	}
+	
+	/* El equals de la clase base se hereda automáticamente. */
 }
+

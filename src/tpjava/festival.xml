@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<festival>
+  <zonas>
+    <zona tipo="comun" codigo="C001" descripcion="Zona Peatonal Norte"/>
+    <zona tipo="comun" codigo="C002" descripcion="Zona Peatonal Sur"/>
+    <zona tipo="comun" codigo="C003" descripcion="Zona de Descanso"/>
+    <zona tipo="comun" codigo="C004" descripcion="Zona de Entrada"/>
+    <zona tipo="comun" codigo="C005" descripcion="Zona de Servicios"/>
+    <zona tipo="comun" codigo="C006" descripcion="Zona de Primeros Auxilios"/>
+    <zona tipo="comun" codigo="C007" descripcion="Zona de Baños"/>
+    <zona tipo="comun" codigo="C008" descripcion="Zona de Seguridad"/>
+    <zona tipo="comun" codigo="C009" descripcion="Zona Familiar"/>
+    <zona tipo="comun" codigo="C010" descripcion="Zona de Estacionamiento"/>
+    <zona tipo="comun" codigo="C011" descripcion="Zona de Juegos"/>
+    <zona tipo="comun" codigo="C012" descripcion="Zona de Comercios"/>
+    <zona tipo="comun" codigo="C013" descripcion="Zona de Información"/>
+    <zona tipo="comun" codigo="C014" descripcion="Zona de Acceso VIP"/>
+    <zona tipo="comun" codigo="C015" descripcion="Zona de Medios"/>
+    <zona tipo="comun" codigo="C016" descripcion="Zona de Comidas"/>
+    <zona tipo="comun" codigo="C017" descripcion="Zona de Salida"/>
+    <zona tipo="comun" codigo="C018" descripcion="Zona de Bebidas"/>
+    <zona tipo="comun" codigo="C019" descripcion="Zona de Recreacion"/>
+    <zona tipo="comun" codigo="C020" descripcion="Zona de Servicio Técnico"/>
+  
+    <zona tipo="escenario" codigo="E001" descripcion="Escenario Principal" capacidadMaxima="2000">
+      <eventoMusical fecha="2025-06-14" hora="18:00" artistaID="ART001"/>
+      <eventoMusical fecha="2025-06-14" hora="20:00" artistaID="ART002"/>
+    </zona>
+    <zona tipo="escenario" codigo="E002" descripcion="Escenario Secundario" capacidadMaxima="1500">
+      <eventoMusical fecha="2025-06-15" hora="17:00" artistaID="ART003"/>
+      <eventoMusical fecha="2025-06-15" hora="19:00" artistaID="ART004"/>
+    </zona>
+    <zona tipo="escenario" codigo="E003" descripcion="Escenario Acústico" capacidadMaxima="500">
+      <eventoMusical fecha="2025-06-16" hora="16:00" artistaID="ART005"/>
+      <eventoMusical fecha="2025-06-16" hora="18:00" artistaID="ART006"/>
+    </zona>
+    <zona tipo="escenario" codigo="E004" descripcion="Escenario Electrónico" capacidadMaxima="800">
+      <eventoMusical fecha="2025-06-17" hora="22:00" artistaID="ART007"/>
+    </zona>
+    <zona tipo="escenario" codigo="E005" descripcion="Escenario Jazz" capacidadMaxima="600">
+      <eventoMusical fecha="2025-06-18" hora="19:30" artistaID="ART008"/>
+    </zona>
+    <zona tipo="escenario" codigo="E006" descripcion="Escenario Rock" capacidadMaxima="1200">
+      <eventoMusical fecha="2025-06-19" hora="21:00" artistaID="ART009"/>
+    </zona>
+    <zona tipo="escenario" codigo="E007" descripcion="Escenario Clásico" capacidadMaxima="700">
+      <eventoMusical fecha="2025-06-20" hora="19:00" artistaID="ART010"/>
+    </zona>
+    <zona tipo="escenario" codigo="E008" descripcion="Escenario Pop" capacidadMaxima="1300">
+      <eventoMusical fecha="2025-06-21" hora="20:30" artistaID="ART011"/>
+    </zona>
+    <zona tipo="escenario" codigo="E009" descripcion="Escenario Indie" capacidadMaxima="900"/>
+    <zona tipo="escenario" codigo="E010" descripcion="Escenario Folk" capacidadMaxima="800"/>
+  
+    <zona tipo="restringida" codigo="R001" descripcion="Backstage" capacidadMaxima="100"/>
+    <zona tipo="restringida" codigo="R002" descripcion="Zona Staff" capacidadMaxima="80"/>
+    <zona tipo="restringida" codigo="R003" descripcion="Zona de Equipos" capacidadMaxima="60"/>
+    <zona tipo="restringida" codigo="R004" descripcion="Zona VIP" capacidadMaxima="120"/>
+    <zona tipo="restringida" codigo="R005" descripcion="Zona de Control" capacidadMaxima="50"/>
+    <zona tipo="restringida" codigo="R006" descripcion="Zona de Carga" capacidadMaxima="70"/>
+    <zona tipo="restringida" codigo="R007" descripcion="Zona Técnica" capacidadMaxima="90"/>
+    <zona tipo="restringida" codigo="R008" descripcion="Zona de Seguridad" capacidadMaxima="110"/>
+    <zona tipo="restringida" codigo="R009" descripcion="Zona de Almacenamiento" capacidadMaxima="40"/>
+    <zona tipo="restringida" codigo="R010" descripcion="Zona de Prensa" capacidadMaxima="30"/>
+    <zona tipo="restringida" codigo="R011" descripcion="Zona de Emergencia" capacidadMaxima="55"/>
+    <zona tipo="restringida" codigo="R012" descripcion="Zona de Control de Acceso" capacidadMaxima="45"/>
+    <zona tipo="restringida" codigo="R013" descripcion="Zona de Producción" capacidadMaxima="65"/>
+    <zona tipo="restringida" codigo="R014" descripcion="Zona de Mantenimiento" capacidadMaxima="35"/>
+    <zona tipo="restringida" codigo="R015" descripcion="Zona de Catering" capacidadMaxima="40"/>
+  
+    <zona tipo="stand" codigo="S001" descripcion="Stand de Comida 1" capacidadMaxima="15" id="ST001" ubicacion="Zona de Comidas" comercianteID="COM001"/>
+    <zona tipo="stand" codigo="S002" descripcion="Stand de Bebidas 1" capacidadMaxima="10" id="ST002" ubicacion="Zona de Bebidas" comercianteID="COM002"/>
+    <zona tipo="stand" codigo="S003" descripcion="Stand de Merchandising" capacidadMaxima="20" id="ST003" ubicacion="Zona de Entrada" comercianteID="COM003"/>
+    <zona tipo="stand" codigo="S004" descripcion="Stand de Souvenirs" capacidadMaxima="12" id="ST004" ubicacion="Zona de Salida" comercianteID="COM004"/>
+    <zona tipo="stand" codigo="S005" descripcion="Stand de Ropa" capacidadMaxima="18" id="ST005" ubicacion="Zona de Comercios" comercianteID="COM005"/>
+    <zona tipo="stand" codigo="S006" descripcion="Stand de Tecnología" capacidadMaxima="22" id="ST006" ubicacion="Zona de Servicio Tecnico" comercianteID="COM006"/>
+    <zona tipo="stand" codigo="S007" descripcion="Stand de Libros" capacidadMaxima="14" id="ST007" ubicacion="Zona de Comercios" comercianteID="COM007"/>
+    <zona tipo="stand" codigo="S008" descripcion="Stand de Arte" capacidadMaxima="16" id="ST008" ubicacion="Zona Recreacion" comercianteID="COM008"/>
+    <zona tipo="stand" codigo="S009" descripcion="Stand de Juguetes" capacidadMaxima="15" id="ST009" ubicacion="Zona de Juegos" comercianteID="COM009"/>
+    <zona tipo="stand" codigo="S010" descripcion="Stand de Regalos" capacidadMaxima="20" id="ST010" ubicacion="Zona de Comercios" comercianteID="COM010"/>
+  </zonas>
+  
+  <personas>
+    <persona tipo="artista" id="ART001" nombre="Juan Pérez">
+      <zonaAcceso codigo="R010" />
+      <zonaAcceso codigo="R008" />
+      <zonaAcceso codigo="E001" />
+    </persona>
+    <persona tipo="artista" id="ART002" nombre="Laura Gómez">
+      <zonaAcceso codigo="R010" />
+      <zonaAcceso codigo="E001" />
+    </persona>
+    <persona tipo="artista" id="ART003" nombre="Pedro Martínez">
+      <zonaAcceso codigo="R003" />
+      <zonaAcceso codigo="R004" />
+      <zonaAcceso codigo="E002" />
+    </persona>
+    <persona tipo="artista" id="ART004" nombre="Sofía Díaz">
+      <zonaAcceso codigo="R004" />
+      <zonaAcceso codigo="E002" />
+    </persona>
+    <persona tipo="artista" id="ART005" nombre="Carlos Ramírez">
+      <zonaAcceso codigo="R005" />
+      <zonaAcceso codigo="R001" />
+      <zonaAcceso codigo="E003" />
+    </persona>
+    <persona tipo="artista" id="ART006" nombre="Martina López">
+      <zonaAcceso codigo="R013" />
+      <zonaAcceso codigo="E003" />
+    </persona>
+    <persona tipo="artista" id="ART007" nombre="Diego Torres">
+      <zonaAcceso codigo="R003" />
+      <zonaAcceso codigo="R004" />
+      <zonaAcceso codigo="E004" />
+    </persona>
+    <persona tipo="artista" id="ART008" nombre="Lucía Fernández">
+      <zonaAcceso codigo="R008" />
+      <zonaAcceso codigo="E005" />
+    </persona>
+    <persona tipo="artista" id="ART009" nombre="Ricardo Sánchez">
+      <zonaAcceso codigo="R009" />
+      <zonaAcceso codigo="R001" />
+      <zonaAcceso codigo="E006" />
+    </persona>
+    <persona tipo="artista" id="ART010" nombre="Camila Morales">
+      <zonaAcceso codigo="R001" />
+      <zonaAcceso codigo="E007" />
+    </persona>
+    <persona tipo="artista" id="ART011" nombre="Tomás Ruiz">
+      <zonaAcceso codigo="R001" />
+      <zonaAcceso codigo="R003" />
+      <zonaAcceso codigo="E008" />
+    </persona>
+    <persona tipo="asistente" id="ASI001" nombre="Ana Ruiz" />
+    <persona tipo="asistente" id="ASI002" nombre="Luis Fernández" />
+    <persona tipo="asistente" id="ASI003" nombre="María Torres" />
+    <persona tipo="asistente" id="ASI004" nombre="Javier Morales" />
+    <persona tipo="asistente" id="ASI005" nombre="Marta González" />
+    <persona tipo="asistente" id="ASI006" nombre="Pablo Sánchez" />
+    <persona tipo="asistente" id="ASI007" nombre="Elena Flores" />
+    <persona tipo="asistente" id="ASI008" nombre="Ramón Pérez" />
+    <persona tipo="asistente" id="ASI009" nombre="Isabel Gómez" />
+    <persona tipo="asistente" id="ASI010" nombre="Diego Martínez" />
+    <persona tipo="asistente" id="ASI011" nombre="Clara Rodríguez" />
+    <persona tipo="asistente" id="ASI012" nombre="Joaquín Fernández" />
+    <persona tipo="asistente" id="ASI013" nombre="Lorena Díaz" />
+    <persona tipo="asistente" id="ASI014" nombre="Raúl González" />
+    <persona tipo="asistente" id="ASI015" nombre="Victoria Sánchez" />
+    <persona tipo="comerciante" id="COM001" nombre="Ana Ruiz">
+      <zonaAcceso codigo="S001" />
+    </persona>
+    <persona tipo="comerciante" id="COM002" nombre="Luis Fernández">
+      <zonaAcceso codigo="S002" />
+      <zonaAcceso codigo="R006" />
+    </persona>
+    <persona tipo="comerciante" id="COM003" nombre="María Torres">
+      <zonaAcceso codigo="S003" />
+    </persona>
+    <persona tipo="comerciante" id="COM004" nombre="Javier Morales">
+      <zonaAcceso codigo="S004" />
+    </persona>
+    <persona tipo="comerciante" id="COM005" nombre="Marta González">
+      <zonaAcceso codigo="S005" />
+      <zonaAcceso codigo="R009" />
+    </persona>
+    <persona tipo="comerciante" id="COM006" nombre="Pablo Sánchez">
+      <zonaAcceso codigo="S006" />
+    </persona>
+    <persona tipo="comerciante" id="COM007" nombre="Elena Flores">
+      <zonaAcceso codigo="S007" />
+      <zonaAcceso codigo="R009" />
+    </persona>
+    <persona tipo="comerciante" id="COM008" nombre="Ramón Pérez">
+      <zonaAcceso codigo="S008" />
+     </persona>
+    <persona tipo="comerciante" id="COM009" nombre="Isabel Gómez">
+      <zonaAcceso codigo="S009" />
+    </persona>
+    <persona tipo="comerciante" id="COM010" nombre="Diego Martínez">
+      <zonaAcceso codigo="S010" />
+    </persona>
+    <persona tipo="staff" id="STA001" nombre="Marcos López"/>
+    <persona tipo="staff" id="STA002" nombre="Valeria Mendoza"/>
+    <persona tipo="staff" id="STA003" nombre="Gustavo Ríos"/>
+    <persona tipo="staff" id="STA004" nombre="Andrea Gómez"/>
+    <persona tipo="staff" id="STA005" nombre="Jorge Fernández"/>
+    <persona tipo="staff" id="STA006" nombre="Lucía Pérez"/>
+    <persona tipo="staff" id="STA007" nombre="Diego Morales"/>
+    <persona tipo="staff" id="STA008" nombre="Sofía Herrera"/>
+    <persona tipo="staff" id="STA009" nombre="Ramón Castro"/>
+    <persona tipo="staff" id="STA010" nombre="Carolina Díaz"/>
+  </personas>  
+  
+  <eventos>
+    <evento personaID="ART001" autorizado="true" zona="E001" fecha="2025-06-14" hora="17:45" cantminutos="12"/>
+    <evento personaID="ART002" autorizado="true" zona="E001" fecha="2025-06-14" hora="19:00" cantminutos="12"/>
+    <evento personaID="ART003" autorizado="true" zona="E002" fecha="2025-06-15" hora="16:40" cantminutos="12"/>
+    <evento personaID="ART004" autorizado="true" zona="E002" fecha="2025-06-15" hora="18:30" cantminutos="12"/>
+    <evento personaID="ART005" autorizado="true" zona="E003" fecha="2025-06-16" hora="15:50" cantminutos="12"/>
+    <evento personaID="ART006" autorizado="true" zona="E003" fecha="2025-06-16" hora="17:15" cantminutos="12"/>
+    <evento personaID="ART007" autorizado="true" zona="E004" fecha="2025-06-17" hora="21:15" cantminutos="12"/>
+    <evento personaID="ART008" autorizado="true" zona="E005" fecha="2025-06-18" hora="18:50" cantminutos="12"/>
+    <evento personaID="ART009" autorizado="true" zona="E006" fecha="2025-06-19" hora="20:45" cantminutos="12"/>
+    <evento personaID="ART010" autorizado="true" zona="E007" fecha="2025-06-20" hora="18:15" cantminutos="12"/>
+    <evento personaID="ART011" autorizado="true" zona="E008" fecha="2025-06-21" hora="19:30" cantminutos="12"/>
+    <evento personaID="ASI001" autorizado="true" zona="C001" fecha="2025-06-14" hora="14:10" cantminutos="12"/>
+    <evento personaID="ASI002" autorizado="true" zona="C003" fecha="2025-06-14" hora="14:25" cantminutos="12"/>
+    <evento personaID="ASI003" autorizado="true" zona="C012" fecha="2025-06-14" hora="15:00" cantminutos="12"/>
+    <evento personaID="COM001" autorizado="true" zona="S001" fecha="2025-06-14" hora="13:00" cantminutos="12"/>
+    <evento personaID="COM002" autorizado="true" zona="S002" fecha="2025-06-14" hora="13:05" cantminutos="12"/>
+    <evento personaID="COM005" autorizado="true" zona="S005" fecha="2025-06-14" hora="13:10" cantminutos="12"/>
+    <evento personaID="STA001" autorizado="true" zona="R002" fecha="2025-06-14" hora="10:00" cantminutos="12"/>
+    <evento personaID="STA002" autorizado="true" zona="R005" fecha="2025-06-14" hora="10:15" cantminutos="12"/>
+    <evento personaID="STA003" autorizado="true" zona="E001" fecha="2025-06-14" hora="10:45" cantminutos="12"/>
+  </eventos>
+</festival>
