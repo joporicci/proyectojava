@@ -18,4 +18,9 @@ public class Zona {
 	public void setCodigoAlfanumerico(String codigoAlf) {
 		codigoAlfanumerico = codigoAlf;
 	}
+	@Override
+	public String toString() {
+		return "CODIGO ALFANUMERICO: " + codigoAlfanumerico + "   DESCRIPCION: " + descripcion;
+	}
+	
 }

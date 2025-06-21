@@ -4,6 +4,7 @@ import tpjava.personas.Artistas;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+<<<<<<< HEAD
 public class EventoMusical implements Comparable<EventoMusical> {
     private LocalDate fecha;
     private LocalTime hora;
@@ -45,4 +46,23 @@ public class EventoMusical implements Comparable<EventoMusical> {
     public int hashCode() {
         return fecha.hashCode() + hora.hashCode();
     }
+=======
+public class EventoMusical {
+	LocalDate fecha;
+	LocalTime hora;
+	Artistas artista;
+	public EventoMusical(LocalDate f, LocalTime h, Artistas a) {
+		fecha = f;
+		hora = h;
+		artista = a;
+	}
+	public Artistas obtener_Artista() {
+		return artista;
+	}
+	
+	@Override
+	public String toString() {
+		return "FECHA: " + fecha.toString() + "\tHORA: " + hora.toString() +  "\tARTISTA: " + artista.toString();  
+	}
+>>>>>>> 79c6b0010e54068a078b491e74bf6759d153371d
 }
