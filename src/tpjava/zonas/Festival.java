@@ -1,5 +1,7 @@
 package tpjava.zonas;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,42 +12,52 @@ import tpjava.personas.Personas;
 import tpjava.personas.Acceso;
 import tpjava.personas.Artistas;
 import tpjava.personas.Comerciantes;
+import tpjava.zonas.Stand;
 import tpjava.excepciones.*;
 
 public class Festival {  /* Clase manejadora de zonas & personas */
-	static private ArrayList<Zona> listaZonas; /* Almacena las zonas, orden ascendente */
-	static private ArrayList<Personas> listaPersonas; /* Almacena las personas, orden ascendente */
+	static private ArrayList<Zona> listaZonas; /* Almacena TODAS las zonas */
+	static private ArrayList<Escenario> listaEscenarios; /* Almacena solo los escenarios, para no tener que buscarlos cada vez que se inicializa un Asistente/Artista */
+	static private ArrayList<Stand> listaStands; /* Almacena solo los Stands, para no tener que buscarlos cada vez que se inicializa un Comerciante */
+	static private ArrayList<Personas> listaPersonas; /* Almacena las personas */
 	public Festival() {
 		listaZonas = new ArrayList<>();
+		listaEscenarios = new ArrayList<>();
+		listaStands = new ArrayList<>();
 		listaPersonas = new ArrayList<>(); 
 	}
-	public void agregar_Zona(String cod, String desc) {
-		listaZonas.add(new Zona(cod,desc));
+	public void agregar_Zona(Zona zonaNueva) {
+		/* Agrega una persona a listaZonas y/o a listaEscenarios o listaStands de Festival. */
+		listaZonas.add(zonaNueva);
+		if(zonaNueva instanceof Escenario)
+			listaEscenarios.add((Escenario)zonaNueva);
+		else
+			if(zonaNueva instanceof Stand)
+				listaStands.add((Stand)zonaNueva);
 	}
-	public void agregar_Persona(String id, String name) {
-		listaPersonas.add(new Personas(id,name));
+	public void agregar_Persona(Personas personaNueva) {
+		/* Agrega una persona a listaPersonas de Festival. */
+		listaPersonas.add(personaNueva);
 	}
 	
 	public static Escenario devolver_Escenario(Artistas artista) throws ExcepcionEscenarioNoExiste {  /* Devuelve la referencia al escenario de ese artista */
-		Iterator<Zona> iterador = listaZonas.iterator();
-		Zona aux = listaZonas.getFirst();
-		boolean seEncontro = false;
+		Iterator<Escenario> iterador = listaEscenarios.iterator();
+		Escenario aux = listaEscenarios.getFirst();
+		boolean seEncontro = aux.estaArtista(artista);
 		while(iterador.hasNext() && !seEncontro) {
-			if(aux instanceof Escenario) {
-				if(((Escenario) aux).estaArtista(artista))
-					seEncontro = true;
-				else
-					aux = iterador.next();
-			}
+			if(aux.estaArtista(artista))
+				seEncontro = true;
+			else
+				aux = iterador.next();
 		}
 		if (seEncontro)
-			return (Escenario)aux;
+			return aux;
 		else
 			throw new ExcepcionEscenarioNoExiste("No se encontro escenario alguno en el que el artista actue.");
 	}
 	
-	
-	public static ArrayList<Zona> devolver_TODAS_Zonas() {  /* Devuelve una ArrayList con todas las zonas no comunes. */
+	public static ArrayList<Zona> devolver_TODAS_ZonasNOComunes() {  
+		/* Devuelve una ArrayList con todas las zonas no comunes, para asi evitar redundancia. */
 		ArrayList<Zona> lZonas = new ArrayList<>(); 
 		for(Zona zonaActual : listaZonas) {
 			if(!(zonaActual instanceof ZonaComun))
@@ -54,15 +66,14 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 		return lZonas;
 	}
 	
-	public static Stand devolver_Stand(Comerciantes comerciante) throws ExcepcionStandNoExiste {  /* Devuelve el Stand del comerciante ingresado */
-		Iterator<Zona> iterador = listaZonas.iterator();
-		Zona aux = listaZonas.getFirst();
-		boolean seEncontro = false;
-		if(aux instanceof Stand)
-			seEncontro = ((Stand) aux).estaComerciante(comerciante);
+	public static Stand devolver_Stand(String idResponsable) throws ExcepcionStandNoExiste {  
+		/* Devuelve el Stand del comerciante ingresado */
+		Iterator<Stand> iterador = listaStands.iterator();
+		Stand aux = listaStands.getFirst();
+		boolean seEncontro = aux.estaResponsable(idResponsable);
 		while(iterador.hasNext() && !seEncontro) {
-			if(aux instanceof Stand)
-				seEncontro = ((Stand) aux).estaComerciante(comerciante);
+			if(aux.estaResponsable(idResponsable))
+				seEncontro = true;
 			else
 				aux = iterador.next();
 		}
@@ -73,15 +84,18 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 			
 	}
 	
-	public static ArrayList<Escenario> devolver_ListaEscenarios() { /* Devuelve una lista con todos los escenarios del festival */
-		ArrayList<Escenario> listaEscenarios = new ArrayList<>();
-		for(Zona zonaActual : listaZonas)
-			if(zonaActual instanceof Escenario)
-				listaEscenarios.add((Escenario)zonaActual);
+	public static ArrayList<Escenario> devolver_ListaEscenarios() { 
+		/* Devuelve una lista con todos los Escenarios del festival. */
 		return listaEscenarios;
 	}
 	
+	public static ArrayList<Stand> devolver_listaStands(){
+		/* Devuelve una lista con todos los Stands del festival. */
+		return listaStands;
+	}
+	
 	public static Personas devolver_Persona(String id) throws ExcepcionPersonaNoExiste {
+		/* Devuelve la Persona del id ingresado como parámetro; si no se encuentra se tira una ExcepcionPersonaNoExiste. */
 		Iterator<Personas> iterador = listaPersonas.iterator();
 		Personas auxPersona = listaPersonas.getFirst(), personaBuscada = new Personas(id,"----");
 		while(iterador.hasNext() && !auxPersona.equals(personaBuscada))
@@ -92,7 +106,8 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 			throw new ExcepcionPersonaNoExiste("Persona no encontrada en la base de datos de Festival.");
 	}
 	
-	public static void listar_Zonas(LocalDate fechaActual, LocalTime horaActual) {
+	public static void listar_ZonasPorConcurrencia(LocalDate fechaActual, LocalTime horaActual) {
+		/* Lista todas las zonas descendentemente por concurrencia actual. */
 		HashMap<Zona, Integer> mapaCantidades = new HashMap<>();  /* Mapa de zonas y su cantidad desordenadas */
 		Zona zonaAux;
 		int cantTotalPersonas = 0;
@@ -117,5 +132,22 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 				((Escenario) zonaAux).listar_EventosProgramados();
 		}
 		System.out.println("\nCANTIDAD TOTAL DE PERSONAS EN EL PREDIO = " + cantTotalPersonas);		
+	}
+	
+	public static void mostrar_EmpleadosStand(Stand puesto) {
+		String idResponsable = puesto.obtener_Responsable().obtenerID();
+		for(Personas personaActual : listaPersonas) {
+			if(personaActual instanceof Comerciantes)
+				if(((Comerciantes) personaActual).es_EmpleadoDe(idResponsable))
+					System.out.println("* " + personaActual.toString());
+		}
+	}
+	
+	public static void listar_StandsAlfabeticamente() {  
+		/* Lista cada uno de los Stands ascendentemente por orden alfabético. */
+		ArrayList<Stand> listaStands = devolver_listaStands();  
+		Collections.sort(listaStands);  /* Se ordena la lista Stands ascendentemente */
+		for(Stand standActual : listaStands)
+			standActual.mostrar();
 	}
 }
