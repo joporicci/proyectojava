@@ -71,7 +71,7 @@ public class VentanaModificarAcceso extends JFrame {
         }
 
         try {
-            personaActual = Festival.buscarPersonaPorID(id);
+            personaActual = Festival.devolver_Persona(id);
             comboZonaActual.removeAllItems();
             for (Zona zona : personaActual.obtenerListaZonas()) {
                 comboZonaActual.addItem(zona.getCodigoAlfanumerico());

@@ -58,7 +58,7 @@ public class VentanaBuscarPorPersona extends JFrame {
         	}
         try {
         	// Me conecto con la clase manejadora festival y busco las persona por su id mostrando el listado de zonas accesibles de la misma
-            Personas persona = Festival.buscarPersonaPorID(id);
+            Personas persona = Festival.devolver_Persona(id);
             StringBuilder sb = new StringBuilder();
             sb.append("Nombre: ").append(persona.obtenerID()).append("\n");
             sb.append("Zonas accesibles:\n");
