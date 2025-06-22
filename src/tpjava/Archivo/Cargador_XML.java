@@ -14,12 +14,16 @@ import tpjava.personas.*;
 import tpjava.misc.EventoMusical;
 
 import tpjava.excepciones.*;
+import java.lang.NullPointerException;
 
 public class Cargador_XML {
-	public static void main(String[] args) {
+	
+	private static ArrayList<String> errores;
+	
+	public static void cargar_Todo(String[] args) {
+		errores = new ArrayList<>();
 		cargar_Personas();
 		cargar_Zonas();
-		
 	}
 	
 	public static void cargar_Personas() {
@@ -38,6 +42,8 @@ public class Cargador_XML {
 		    
 		    raiz.normalize();
 		    
+		    /* NOTA: Las personas, si falta algún elemento, se cargan igual pero sin el/los elementos faltantes. */
+		    
 		    nodoTipo = raiz.getElementsByTagName("asistentes");
 		    if(nodoTipo.getLength() > 0) {  /* Si hay ASISTENTES... */
 		    	listaTipo = ((Element) nodoTipo.item(0)).getElementsByTagName("asistente");
@@ -46,8 +52,14 @@ public class Cargador_XML {
 		    		elemento = (Element) listaTipo.item(i);
 		    		id = elemento.getElementsByTagName("id").item(0).getTextContent();
 		    		nombre = elemento.getElementsByTagName("nombre").item(0).getTextContent();
+		    		chequear_Persona(id,nombre,i,"Asistente");
 		    		asistenteActual = new Asistentes(id,nombre);
-		    		agregar_AccesosAPersona(elemento, asistenteActual);
+		    		try {
+		    			agregar_AccesosAPersona(elemento, asistenteActual);		    			
+		    		}
+		    		catch(ExcepcionAccesoIncorrecto e) {
+		    			errores.add(e.getMessage() + "Asistente - indice " + i);
+		    		}
 		    		Festival.agregar_Persona(asistenteActual);
 		    	}
 		    }
@@ -67,10 +79,30 @@ public class Cargador_XML {
 		    		lZonasR = new ArrayList<>();
 		    		for(int j = 0; j < listaIDSZonasR.getLength(); j++) {
 		    			elementoZonaR = (Element) listaIDSZonasR.item(j);
-		    			lZonasR.add((ZonaRestringida)Festival.buscarZonaPorID(elementoZonaR.getElementsByTagName("id").item(0).getTextContent()));
+		    			try {
+		    			    lZonasR.add((ZonaRestringida)Festival.buscarZonaPorID(elementoZonaR.getElementsByTagName("id").item(0).getTextContent()));
+		    			}
+		    			catch(ExcepcionZonaNoExiste e) {
+		    				errores.add("ZonaRestringida de Artista no encontrada - indice " + i + "-" + j + "\tERROR: " + e.getMessage());
+		    			}
 		    		}
-		    		artistaAct = new Artistas(id,nombre,(ZonaRestringida[])lZonasR.toArray());
-		    		agregar_AccesosAPersona(elemento, artistaAct);
+		    		chequear_Persona(id,nombre,i,"Artista");
+		    		artistaAct = null;  // Se inicializa artistaAct en null por si ocurre una excepción durante la inicialización efectiva.
+		    		try{
+		    			artistaAct = new Artistas(id,nombre,(ZonaRestringida[])lZonasR.toArray());
+		    		}
+		    		catch(ExcepcionEscenarioNoExiste e) {
+		    			errores.add("Escenario de Artista no encontrado - indice " + i + "\tERROR: " + e.getMessage());
+		    		}
+		    		if(artistaAct != null)
+		    		    try {
+		    		    	agregar_AccesosAPersona(elemento, artistaAct);
+		    		    }
+		    		    catch(ExcepcionAccesoIncorrecto e) {
+		    			    errores.add(e.getMessage() + "Artista - indice " + i);
+		    		    }
+		    		else
+		    			errores.add("No se pudo inicializar Artista de indice " + i);
 		    		Festival.agregar_Persona(artistaAct);		    			
 		    	}
 		    }
@@ -88,14 +120,35 @@ public class Cargador_XML {
 		    		id = elemento.getElementsByTagName("id").item(0).getTextContent();
 		    		idJefe = elemento.getElementsByTagName("idJefe").item(0).getTextContent();
 		    		nombre = elemento.getElementsByTagName("nombre").item(0).getTextContent();
+		    		chequear_Persona(id,nombre,i,"Comerciante");
 		    		listaIDSZonasR = elemento.getElementsByTagName("zonaR");
 		    		lZonasR = new ArrayList<>();
 		    		for(int j = 0; j < listaIDSZonasR.getLength(); j++) {
 		    			elementoZonaR = (Element) listaIDSZonasR.item(j);
-		    			lZonasR.add((ZonaRestringida)Festival.buscarZonaPorID(elementoZonaR.getElementsByTagName("id").item(0).getTextContent()));
+		    			try{
+		    				lZonasR.add((ZonaRestringida)Festival.buscarZonaPorID(elementoZonaR.getElementsByTagName("id").item(0).getTextContent()));
+		    			}
+		    			catch(ExcepcionZonaNoExiste e) {
+		    				errores.add("ZonaRestringida de Comerciante no encontrada - indice " + i + "-" + j + "\tERROR: " + e.getMessage());
+		    			}
 		    		}
-		    		comercianteAct = new Comerciantes(id,nombre,idJefe,(ZonaRestringida[])lZonasR.toArray());
-		    		agregar_AccesosAPersona(elemento,comercianteAct);
+		    		comercianteAct = null; // Se inicializa comercianteAct en null por si ocurre una excepción durante la inicialización efectiva.
+		    		if(idJefe == null || idJefe.isEmpty())
+		    			errores.add("Comerciante sin idJefe, no se puede buscar Stand - indice " + i);
+		    		else
+		    			try {
+		    				comercianteAct = new Comerciantes(id,nombre,idJefe,(ZonaRestringida[])lZonasR.toArray());
+		    			}
+		    		    catch(ExcepcionStandNoExiste e) {
+		    		    	errores.add("Stand de Comerciante no encontrado - indice " + i + "\tERROR: " + e.getMessage());
+		    		    }
+		    		
+		    		try {
+		    		    agregar_AccesosAPersona(elemento,comercianteAct);
+		    		}
+		    		catch(ExcepcionAccesoIncorrecto e) {
+		    			errores.add(e.getMessage() + "Comerciante - indice " + i);
+		    		}
 		    		Festival.agregar_Persona(comercianteAct);
 		    	}
 		    }
@@ -108,8 +161,14 @@ public class Cargador_XML {
 		    		elemento = (Element) listaTipo.item(i);
 		    		id = elemento.getElementsByTagName("id").item(0).getTextContent();
 		    		nombre = elemento.getElementsByTagName("nombre").item(0).getTextContent();
+		    		chequear_Persona(id, nombre, i,"StaffOrganizador");
 		    		staffActual = new StaffOrganizador(id,nombre);
-		    		agregar_AccesosAPersona(elemento,staffActual);
+		    		try {
+		    		    agregar_AccesosAPersona(elemento,staffActual);
+		    		}
+		    		catch(ExcepcionAccesoIncorrecto e) {
+		    			errores.add(e.getMessage() + "StaffOrganizador - indice " + i);
+		    		}
 		    		Festival.agregar_Persona(staffActual);
 		    	}
 		    }
@@ -119,13 +178,13 @@ public class Cargador_XML {
 		}
 	}
 	
-	public static void agregar_AccesosAPersona(Element elemento, Personas persona) {
+	public static void agregar_AccesosAPersona(Element elemento, Personas persona) throws ExcepcionAccesoIncorrecto{
 		/* Carga los datos principales de la clase base Persona, junto a todos sus accesos. */
 	    String idZonaAcceso;
 	    LocalDate fechaAcceso;
 	    LocalTime horaAcceso;
 	    long cantMinsAcceso;
-	    boolean estadoAcceso;
+	    boolean estadoAcceso, huboError = false;
 	    
 	    NodeList listaAccesos = elemento.getElementsByTagName("acceso");
 	    Element elementoAcceso;
@@ -141,11 +200,24 @@ public class Cargador_XML {
 			    persona.agregarAcceso(Festival.buscarZonaPorID(idZonaAcceso), fechaAcceso, horaAcceso, cantMinsAcceso, estadoAcceso);	
 			}
 			catch(ExcepcionZonaNoExiste e) {
-				System.err.println("ERROR, Zona no encontrada: " + e.getMessage());
+				errores.add("ERROR, Acceso a zona de indice " +  j + "no encontrada: " + e.getMessage());
+				huboError = true;
 			}
+		}
+		
+		if(huboError) {
+			throw new ExcepcionAccesoIncorrecto("Los errores de carga de accesos de arriba pertenecen a:");
 		}
 	}
 	
+	private static void chequear_Persona(String id, String nombre, int i, String tipo) {
+		/* Chequea que se hayan cargado correctamente id y nombre. Si no, añade los errores correspondientes a la lista, especificando
+		 * el tipo de persona y el indice para poder localizarlos. */ 
+		if(id == null || id.isEmpty())
+			errores.add(tipo + " sin id - indice " + i);
+		if(nombre == null || nombre.isEmpty())
+			errores.add(tipo + " sin nombre - indice " + i);
+	}
 	
 	public static void cargar_Zonas() {
 		try {
@@ -163,6 +235,8 @@ public class Cargador_XML {
 		    
 		    String codigoAlfanumerico, descripcion;
 		    
+		    /* Nota: las zonas, si falta algún elemento se cargan igual pero sin el/los elemento faltantes. */
+		    
 		    nodoTipo = raiz.getElementsByTagName("escenarios");
 		    if(nodoTipo.getLength() > 0) {  /* Si hay ESCENARIOS... */
 		    	listaTipo = ((Element) nodoTipo.item(0)).getElementsByTagName("escenario");
@@ -175,61 +249,112 @@ public class Cargador_XML {
 		    	LocalTime horaEvento;
 		    	Artistas artistaEvento;
 		    	for(int i = 0; i < listaTipo.getLength(); i++) {
+		    		/* Carga de Escenarios uno por uno */
 		    		elemento = (Element) listaTipo.item(i);
 		    		codigoAlfanumerico = elemento.getElementsByTagName("codigo").item(0).getTextContent();
 		    		descripcion = elemento.getElementsByTagName("descripcion").item(0).getTextContent();
-		    		capacidadMaxima = Integer.parseInt(elemento.getElementsByTagName("capacidad").item(0).getTextContent());
+		    		chequear_Zona(codigoAlfanumerico,descripcion,i,"Escenario");
+		    		try {
+		    			/* Si existe capacidadMaxima, se asigna.,, */
+		    		    capacidadMaxima = obtener_capacidadMaxima(elemento.getElementsByTagName("capacidad"));
+		    		}
+		    		catch(ExcepcionCapacidadIndefinida e) {
+		    			/* ... en cambio, si no existe, se añade un error a la lista errores y se le asigna capacidadMaxima un valor x defecto (0). */
+		    			errores.add("Escenario" + e.getMessage() + i);
+		    			capacidadMaxima = 0;
+		    		}
 		    		escenarioAct = new Escenario(codigoAlfanumerico,descripcion,capacidadMaxima);
 		    		listaEventos = elemento.getElementsByTagName("evento");
 		    		for(int j = 0; j < listaEventos.getLength(); j++) {
+		    			/* Carga de lista de Eventos Musicales del Escenario uno por uno. Si no se encuentra la fecha, la hora o el artista de un evento, este no se agrega a la lista. */
 		    			elementoEvento = (Element) listaEventos.item(j);
-		    			fechaEvento = LocalDate.parse(elementoEvento.getElementsByTagName("fecha").item(0).getTextContent());
-		    			horaEvento = LocalTime.parse(elementoEvento.getElementsByTagName("hora").item(0).getTextContent());
-		    			artistaEvento = (Artistas)Festival.buscarPersonaPorID(elementoEvento.getElementsByTagName("idArtista").item(0).getTextContent());
-		    			escenarioAct.agregar_Evento(new EventoMusical(fechaEvento,horaEvento,artistaEvento.obtenerID()));
+		    			try {
+		    			    fechaEvento = LocalDate.parse(elementoEvento.getElementsByTagName("fecha").item(0).getTextContent());
+		    			    horaEvento = LocalTime.parse(elementoEvento.getElementsByTagName("hora").item(0).getTextContent());
+		    			    artistaEvento = (Artistas)Festival.buscarPersonaPorID(elementoEvento.getElementsByTagName("idArtista").item(0).getTextContent());
+		    			    escenarioAct.agregar_Evento(new EventoMusical(fechaEvento,horaEvento,artistaEvento.obtenerID()));
+		    			}
+		    			catch(NullPointerException eN) {
+		    				errores.add("Fecha u hora de evento musical no encontrado - indice " + i + "-" + j + "\tERROR: " + eN.getMessage());		    				
+		    			}
+		    			catch(ExcepcionPersonaNoExiste e) {
+		    				errores.add("Artista de evento musical no encontrado - indice " + i + "-" + j + "\tERROR: " + e.getMessage());
+		    			}
 		    		}
 		    		Festival.agregar_Zona(escenarioAct);
 		    	}
 		    }
 		    
 		    nodoTipo = raiz.getElementsByTagName("comunes");
-		    if(nodoTipo.getLength() > 0) {
+		    if(nodoTipo.getLength() > 0) {  /* Si hay ZONAS COMUNES... */
 		    	listaTipo = ((Element) nodoTipo.item(0)).getElementsByTagName("comun");
 		    	ZonaComun zonaComunAct;
 		    	for(int i = 0; i < listaTipo.getLength(); i++) {
+		    		/* Carga de Zonas Comunes una por una... */
 		    		elemento = (Element) listaTipo.item(i);
 		    		codigoAlfanumerico = elemento.getElementsByTagName("codigo").item(0).getTextContent();
 		    		descripcion = elemento.getElementsByTagName("descripcion").item(0).getTextContent();
+		    		chequear_Zona(codigoAlfanumerico,descripcion,i,"ZonaComun");
 		    		Festival.agregar_Zona(new ZonaComun(codigoAlfanumerico,descripcion));
 		    	}
 		    }
 		    
 		    nodoTipo = raiz.getElementsByTagName("restringidas");
-		    if(nodoTipo.getLength() > 0) {
+		    if(nodoTipo.getLength() > 0) {  /* Si hay ZONAS RESTRINGIDAS... */
 		    	listaTipo = ((Element) nodoTipo.item(0)).getElementsByTagName("restringida");
 		    	int capacidadMaxima;
 		    	for(int i = 0; i < listaTipo.getLength(); i++) {
+		    		/* Carga de Zonas Restringidas una por una... */
 		    		elemento = (Element) listaTipo.item(i);
 		    		codigoAlfanumerico = elemento.getElementsByTagName("codigo").item(0).getTextContent();
 		    		descripcion = elemento.getElementsByTagName("descripcion").item(0).getTextContent();
-		    		capacidadMaxima = Integer.parseInt(elemento.getElementsByTagName("capacidad").item(0).getTextContent());
+		    		chequear_Zona(codigoAlfanumerico,descripcion,i,"ZonaRestringida");
+		    		try {
+		    			/* Si existe capacidadMaxima, se asigna... */
+		    		    capacidadMaxima = obtener_capacidadMaxima(elemento.getElementsByTagName("capacidad"));
+		    		}
+		    		catch(ExcepcionCapacidadIndefinida e) {
+		    			/* ... en cambio, si no existe, se añade un error a la lista errores y se le asigna capacidadMaxima un valor x defecto (0). */
+		    			errores.add("ZonaRestringida" + e.getMessage() + i);
+		    			capacidadMaxima = 0;
+		    		}
 		    		Festival.agregar_Zona(new ZonaRestringida(codigoAlfanumerico,descripcion,capacidadMaxima));
 		    	}
 		    }
 		    
 		    nodoTipo = raiz.getElementsByTagName("stands");
-		    if(nodoTipo.getLength() > 0) {
+		    if(nodoTipo.getLength() > 0) {  /* SI HAY STANDS... */
 		    	listaTipo = ((Element) nodoTipo.item(0)).getElementsByTagName("stand");
 		    	String ubicacion;
 		    	int capacidadMaxima;
 		    	Comerciantes responsable;
 		    	for(int i = 0; i < listaTipo.getLength(); i++) {
+		    		/* Carga de Stands uno por uno... */
 		    		elemento = (Element) listaTipo.item(i);
 		    		codigoAlfanumerico = elemento.getElementsByTagName("codigo").item(0).getTextContent();
 		    		descripcion = elemento.getElementsByTagName("descripcion").item(0).getTextContent();
-		    		capacidadMaxima = Integer.parseInt(elemento.getElementsByTagName("capacidad").item(0).getTextContent());
+		    		chequear_Zona(codigoAlfanumerico,descripcion,i,"Stand");
+		    		try {
+		    			/* Si existe capacidadMaxima, se asigna... */
+		    		    capacidadMaxima = obtener_capacidadMaxima(elemento.getElementsByTagName("capacidad"));
+		    		}
+		    		catch(ExcepcionCapacidadIndefinida e) {
+		    			/* ... en cambio, si no existe, se añade un error a la lista errores y se le asigna capacidadMaxima un valor x defecto (0). */
+		    			errores.add("ZonaRestringida" + e.getMessage() + i);
+		    			capacidadMaxima = 0;
+		    		}
 		    		ubicacion = elemento.getElementsByTagName("ubicacion").item(0).getTextContent();
-		    		responsable = (Comerciantes)Festival.buscarPersonaPorID(elemento.getElementsByTagName("idResponsable").item(0).getTextContent());
+		    		if(ubicacion == null || ubicacion.isEmpty())
+		    			errores.add("Ubicacion de Stand no encontrada - indice " + i);
+		    		try {
+		    			/* Se intenta buscar al responsable del Stand, si se lo encuentra se asigna a responsable... */
+		    		    responsable = (Comerciantes)Festival.buscarPersonaPorID(elemento.getElementsByTagName("idResponsable").item(0).getTextContent());
+		    		}
+		    		catch(ExcepcionPersonaNoExiste e) {
+		    			/* ... en cambio, si no se lo encuentra, se añade un error a la lista errores y se le asigna null a responsable. */
+		    			errores.add("Responsable de Stand no encontrado - indice " + i);
+		    			responsable = null; 
+		    		}
 		    		Festival.agregar_Zona(new Stand(codigoAlfanumerico,descripcion,capacidadMaxima,ubicacion,responsable));	
 		    	}
 		    }
@@ -237,5 +362,29 @@ public class Cargador_XML {
 		catch(Exception e) {
 			System.err.println("ERROR, No se pudo cargar zonas.xml: " + e.getMessage());
 		}
+	}
+	
+	private static void chequear_Zona(String codigo, String desc, int i, String tipo) {
+		/* Chequea que se hayan cargado correctamente codigoAlfanumerico y descripcion. Si no, añade los errores correspondientes a la lista, especificando
+		 * el tipo de zona y el indice para poder localizarlos. */ 
+		if(codigo == null || codigo.isEmpty())
+			errores.add(tipo + " sin codigoAlfanumerico - indice " + i);
+		if(desc == null || desc.isEmpty())
+			errores.add(tipo + " sin descripcion - indice " + i);
+	}
+	
+	private static int obtener_capacidadMaxima(NodeList auxCapacidad) throws ExcepcionCapacidadIndefinida{
+		/* Obtiene la capacidadMaxima en el elemento capacidadMaxima, si no existe este elemento dentro de la Zona, lanza ExcepcionCapacidadIndefinida. */
+		if(auxCapacidad.getLength() > 0)
+			/* Si existe capacidadMaxima, la devuelve. */
+			return Integer.parseInt(auxCapacidad.item(0).getTextContent());
+		else {
+			/* Si no existe capacidadMaxima, lanza ExcepciónCapacidadIndefinida */
+			throw new ExcepcionCapacidadIndefinida(" sin capacidadMaxima definida - indice ");
+		}
+	}
+	
+	public static ArrayList<String> obtener_Errores(){
+		return errores;
 	}
 }
