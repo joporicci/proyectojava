@@ -27,5 +27,7 @@ public class Stand extends ZonaRestringida implements Comparable<Stand>{
 	@Override
 	public int compareTo(Stand otroStand) {
 		return Integer.valueOf(comercianteResponsable.obtenerNombre()) - Integer.valueOf(otroStand.obtener_Responsable().obtenerNombre());
+
 	}
+
 }

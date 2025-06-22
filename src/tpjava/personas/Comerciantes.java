@@ -1,7 +1,7 @@
 package tpjava.personas;
 import tpjava.zonas.Festival;
-import tpjava.zonas.ZonaRestringida;
 import tpjava.zonas.Zona;
+import tpjava.zonas.ZonaRestringida;
 import tpjava.excepciones.ExcepcionStandNoExiste;
 
 public class Comerciantes extends Personas {  /* NUM: 3 */

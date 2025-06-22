@@ -1,11 +1,12 @@
 package tpjava.zonas;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import tpjava.personas.Personas;
 import tpjava.personas.Artistas;
 import tpjava.personas.Comerciantes;
@@ -13,17 +14,17 @@ import tpjava.zonas.Stand;
 import tpjava.excepciones.*;
 
 public class Festival {  /* Clase manejadora de zonas & personas */
-	static private HashMap<Zona, Integer> mapaZonas; /* Almacena TODAS las zonas + cantidad de gente que tiene c/u */
-	static private ArrayList<Escenario> listaEscenarios; /* Almacena solo los escenarios, para no tener que buscarlos cada vez que se inicializa un Asistente/Artista */
-	static private ArrayList<Stand> listaStands; /* Almacena solo los Stands, para no tener que buscarlos cada vez que se inicializa un Comerciante */
-	static private ArrayList<Personas> listaPersonas; /* Almacena las personas */
+	private static HashMap<Zona, Integer> mapaZonas; /* Almacena TODAS las zonas + cantidad de gente que tiene c/u */
+	private static ArrayList<Escenario> listaEscenarios; /* Almacena solo los escenarios, para no tener que buscarlos cada vez que se inicializa un Asistente/Artista */
+	private static ArrayList<Stand> listaStands; /* Almacena solo los Stands, para no tener que buscarlos cada vez que se inicializa un Comerciante */
+	private static ArrayList<Personas> listaPersonas; /* Almacena las personas */
 	public Festival() {
 		mapaZonas = new HashMap<>();
 		listaEscenarios = new ArrayList<>();
 		listaStands = new ArrayList<>();
 		listaPersonas = new ArrayList<>(); 
 	}
-	public void agregar_Zona(Zona zonaNueva) {
+	public static void agregar_Zona(Zona zonaNueva) {
 		/* Agrega una zona a mapaZonas y/o a listaEscenarios o listaStands de Festival. */
 		mapaZonas.put(zonaNueva,0);
 		if(zonaNueva instanceof Escenario)
@@ -32,7 +33,8 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 			if(zonaNueva instanceof Stand)
 				listaStands.add((Stand)zonaNueva);
 	}
-	public void agregar_Persona(Personas personaNueva) {
+	
+	public static void agregar_Persona(Personas personaNueva) {
 		/* Agrega una persona a listaPersonas de Festival. */
 		listaPersonas.add(personaNueva);
 	}
@@ -127,4 +129,85 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 		for(Stand standActual : listaStands)
 			standActual.mostrar();
 	}
+
+    public static Personas buscarPersonaPorID(String personaID) throws ExcepcionPersonaNoExiste {
+        for (Personas p : listaPersonas) {
+            if (p.obtenerID().equals(personaID)) {
+                return p;
+            }
+        }
+        throw new ExcepcionPersonaNoExiste("ID de persona no registrado: " + personaID);
+    }
+
+    public static Zona buscarZonaPorID(String zonaID) throws ExcepcionZonaNoExiste {
+    	ArrayList<Zona> listaZonasAux = new ArrayList<>(mapaZonas.keySet());
+    	Iterator<Zona> iterador = listaZonasAux.iterator();
+    	Zona aux = listaZonasAux.getFirst();
+        while(iterador.hasNext() && !aux.getCodigoAlfanumerico().equals(zonaID))
+        	aux = iterador.next();
+        if(!aux.getCodigoAlfanumerico().equals(zonaID))
+            throw new ExcepcionZonaNoExiste("ID de zona no registrado: " + zonaID);
+        else
+        	return aux;
+    }
+
+    public static int contarPersonasEnZona(Zona zona) {
+        int contador = 0;
+        for (Personas p : listaPersonas) {
+            if (p.obtenerListaZonas().contains(zona)) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    public static boolean superaCapacidad(Zona zona) {
+        if (zona instanceof ZonaRestringida zonaRest) {
+            return contarPersonasEnZona(zonaRest) > zonaRest.getCapacidad_maxima();
+        }
+        return false;
+    }
+
+    public static void modificarAcceso(String personaID, String zonaID, long minutos)
+            throws ExcepcionPersonaNoExiste, ExcepcionZonaNoExiste {
+
+        Personas persona = buscarPersonaPorID(personaID);
+        Zona zona = buscarZonaPorID(zonaID);
+        LocalDate fecha = LocalDate.now();
+        LocalTime hora = LocalTime.now();
+
+        boolean autorizado = false;
+        if (persona.puedeAcceder(zona) && !superaCapacidad(zona)) {
+            autorizado = true;
+        }
+        persona.agregarAcceso(zona, fecha, hora, minutos, autorizado);
+        if (autorizado) {
+            System.out.println("Acceso AUTORIZADO a zona " + zonaID + " para persona " + personaID);
+        } else {
+            System.out.println("Acceso DENEGADO a zona " + zonaID + " para persona " + personaID);
+        }
+    }
+
+    public static void modificarZonaAccesible(String personaID, String zonaActualID, String zonaNuevaID)
+            throws ExcepcionPersonaNoExiste, ExcepcionZonaNoExiste {
+
+        Personas persona = buscarPersonaPorID(personaID);
+        Zona zonaActual = buscarZonaPorID(zonaActualID);
+        Zona zonaNueva = buscarZonaPorID(zonaNuevaID);
+
+        if (!persona.obtenerListaZonas().contains(zonaActual)) {
+            throw new IllegalArgumentException("La persona no tiene acceso a la zona especificada.");
+        }
+
+        persona.obtenerListaZonas().remove(zonaActual);
+        persona.obtenerListaZonas().add(zonaNueva);
+    }
+
+    public static ArrayList<Personas> devolverListaPersonas() {
+        return new ArrayList<>(listaPersonas); // Retorno copia defensiva
+    }
+
+    public static ArrayList<Zona> devolverListaZonas() {
+        return new ArrayList<>(mapaZonas.keySet()); // Retorno copia defensiva
+    }
 }

@@ -1,8 +1,8 @@
 package tpjava.excepciones;
 
 public class ExcepcionPersonaNoExiste extends Exception{
-	public ExcepcionPersonaNoExiste(String msj) {
-		super(msj);
-	}
-
+	   private static final long serialVersionUID = 1;
+       public ExcepcionPersonaNoExiste(String msj) {
+    	   super(msj);
+       }
 }

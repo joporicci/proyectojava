@@ -6,9 +6,11 @@ import java.util.Iterator;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import tpjava.zonas.Zona;
+import tpjava.zonas.ZonaComun;
 import tpjava.excepciones.ExcepcionPersonaSeFue;
 
-public class Personas{
+
+public class Personas{ // En la clase festival manejo las personas. Aca tengo datos indivuales y lista de zonas accesibles
 	private String ID, nombre;
 	private LinkedHashSet<Acceso> setAccesos;  /* set de Accesos ordenados por el orden de inserción, por lo que el último acceso es el más reciente. */
 	private ArrayList<Zona> listaZonasAccesibles;
@@ -43,7 +45,22 @@ public class Personas{
 		else
 			return ID.equals(((Personas)o).ID);
 	}
-	
+
+	public boolean puedeAcceder(Zona zona) {
+	    
+	    if (zona instanceof ZonaComun)
+	    	return true;
+
+	    
+	    for (Zona z : listaZonasAccesibles) {
+	        if (z.getCodigoAlfanumerico().equals(zona.getCodigoAlfanumerico())) {
+	            return true;
+	        }
+	    }
+
+	    return false;
+    }
+
 	public void imprime_DatosCompletos() {
 		System.out.println("\nID: " + ID + "\tNOMBRE: " + nombre + "\n\tLISTA DE ZONAS ACCESIBLES\n");
 		for(Zona zonaActual : listaZonasAccesibles)
