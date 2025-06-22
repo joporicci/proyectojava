@@ -6,6 +6,7 @@ import org.w3c.dom.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -19,12 +20,18 @@ import java.lang.NullPointerException;
 public class Cargador_XML {
 	
 	private static ArrayList<String> errores;
+	private static HashMap<Stand, String> mapaStandsPendientes;
 	
 	public static void cargar_Todo() {
 		/* Carga la listaPersonas y listaZonas de Festival y añade los errores que ocurran durante la carga a errores. */
 		errores = new ArrayList<>(); 
-		cargar_Personas();
-		cargar_Zonas();
+		cargar_Zonas(); // Se cargan primero las zonas y se crea un mapaStandsPendientes...
+		cargar_Personas(); // ... y se cargan luego las personas, para así poder asignar los comerciantes responsables de cada Stand con las personas ya cargadas.
+		
+		mapaStandsPendientes.forEach((stand,idResponsable) ->{
+			stand.poner_Responsable(idResponsable);
+			Festival.agregar_Zona(stand);
+		});
 	}
 	
 	private static void cargar_Personas() {
@@ -329,7 +336,8 @@ public class Cargador_XML {
 		    	listaTipo = ((Element) nodoTipo.item(0)).getElementsByTagName("stand");
 		    	String ubicacion;
 		    	int capacidadMaxima;
-		    	Comerciantes responsable;
+		    	String idResponsable;
+		    	mapaStandsPendientes = new HashMap<>();
 		    	for(int i = 0; i < listaTipo.getLength(); i++) {
 		    		/* Carga de Stands uno por uno... */
 		    		elemento = (Element) listaTipo.item(i);
@@ -348,16 +356,17 @@ public class Cargador_XML {
 		    		ubicacion = elemento.getElementsByTagName("ubicacion").item(0).getTextContent();
 		    		if(ubicacion == null || ubicacion.isEmpty())
 		    			errores.add("Ubicacion de Stand no encontrada - indice " + i);
+		    		
 		    		try {
-		    			/* Se intenta buscar al responsable del Stand, si se lo encuentra se asigna a responsable... */
-		    		    responsable = (Comerciantes)Festival.buscarPersonaPorID(elemento.getElementsByTagName("idResponsable").item(0).getTextContent());
+		    			/* Se intenta buscar la id del Responsable del Stand, si se lo encuentra se guardan el Stand y idResponsable para asignarlos luego de cargar las personas... */
+		    		    idResponsable = elemento.getElementsByTagName("idResponsable").item(0).getTextContent();
+		    		    mapaStandsPendientes.put(new Stand(codigoAlfanumerico,descripcion,capacidadMaxima,ubicacion,null), idResponsable);
 		    		}
-		    		catch(ExcepcionPersonaNoExiste e) {
-		    			/* ... en cambio, si no se lo encuentra, se añade un error a la lista errores y se le asigna null a responsable. */
-		    			errores.add("Responsable de Stand no encontrado - indice " + i);
-		    			responsable = null; 
+		    		catch(NullPointerException e) {
+		    			/* ... en cambio, si no se la encuentra, se añade un error a la lista errores y se le asigna null a responsable. */
+		    			errores.add("idResponsable de Stand no encontrada - indice " + i);
+		    			Festival.agregar_Zona(new Stand(codigoAlfanumerico,descripcion,capacidadMaxima,ubicacion,null));	
 		    		}
-		    		Festival.agregar_Zona(new Stand(codigoAlfanumerico,descripcion,capacidadMaxima,ubicacion,responsable));	
 		    	}
 		    }
 		}

@@ -1,5 +1,6 @@
 package tpjava.zonas;
 import tpjava.personas.Comerciantes;
+import tpjava.excepciones.ExcepcionPersonaNoExiste;
 
 public class Stand extends ZonaRestringida{
 	String ubicacion;
@@ -9,6 +10,17 @@ public class Stand extends ZonaRestringida{
 		ubicacion = ubi;
 		comercianteResponsable = comerc;
 	}
+	
+	public void poner_Responsable(String idResponsable) {
+		/* Busca una persona a la que le pertenece la ID puesta como parámetro y la asigna a comercianteResponsable. */
+		try {
+		    comercianteResponsable = (Comerciantes)Festival.buscarPersonaPorID(idResponsable);
+		}
+		catch(ExcepcionPersonaNoExiste e) { // Si no se encuentra a una persona con esta ID, comercianteResponsable será = null. 
+			comercianteResponsable = null;
+		}
+	}
+	
 	public boolean estaResponsable(String idResponsable) {
 		/* Devuelve un valor boolean, si está el responsable devuelve true, si no, false. */
 		return comercianteResponsable.obtenerID().equals(idResponsable);
