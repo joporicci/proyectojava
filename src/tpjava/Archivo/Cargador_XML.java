@@ -20,13 +20,15 @@ public class Cargador_XML {
 	
 	private static ArrayList<String> errores;
 	
-	public static void cargar_Todo(String[] args) {
-		errores = new ArrayList<>();
+	public static void cargar_Todo() {
+		/* Carga la listaPersonas y listaZonas de Festival y añade los errores que ocurran durante la carga a errores. */
+		errores = new ArrayList<>(); 
 		cargar_Personas();
 		cargar_Zonas();
 	}
 	
-	public static void cargar_Personas() {
+	private static void cargar_Personas() {
+		/* Carga todas las Personas del archivo personas.xml a la listaPersonas de Festival. */
 		try {
 		    File archivo = new File("personas.xml");
 		    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -178,7 +180,7 @@ public class Cargador_XML {
 		}
 	}
 	
-	public static void agregar_AccesosAPersona(Element elemento, Personas persona) throws ExcepcionAccesoIncorrecto{
+	private static void agregar_AccesosAPersona(Element elemento, Personas persona) throws ExcepcionAccesoIncorrecto{
 		/* Carga los datos principales de la clase base Persona, junto a todos sus accesos. */
 	    String idZonaAcceso;
 	    LocalDate fechaAcceso;
@@ -219,7 +221,8 @@ public class Cargador_XML {
 			errores.add(tipo + " sin nombre - indice " + i);
 	}
 	
-	public static void cargar_Zonas() {
+	private static void cargar_Zonas() {
+		/* Carga todas las Zonas del archivo zonas.xml a la listaZonas de Festival. */
 		try {
 		    File archivo = new File("zonas.xml");
 		
@@ -288,7 +291,6 @@ public class Cargador_XML {
 		    nodoTipo = raiz.getElementsByTagName("comunes");
 		    if(nodoTipo.getLength() > 0) {  /* Si hay ZONAS COMUNES... */
 		    	listaTipo = ((Element) nodoTipo.item(0)).getElementsByTagName("comun");
-		    	ZonaComun zonaComunAct;
 		    	for(int i = 0; i < listaTipo.getLength(); i++) {
 		    		/* Carga de Zonas Comunes una por una... */
 		    		elemento = (Element) listaTipo.item(i);
