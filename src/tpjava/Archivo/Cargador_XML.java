@@ -17,13 +17,20 @@ import tpjava.misc.EventoMusical;
 import tpjava.excepciones.*;
 import java.lang.NullPointerException;
 
+/**
+ * Clase que contiene los atributos y métodos necesarios para trabajar con los objetos de clase Cargador_XML, cuya función es cargar los datos
+ * del programa a partir de un archivo XML.
+ * @author grupo2
+ */
 public class Cargador_XML {
 	
-	private static ArrayList<String> errores;
-	private static HashMap<Stand, String> mapaStandsPendientes;
+	private static ArrayList<String> errores; // Guarda todos los errores que ocurran durante la carga total de los datos.
+	private static HashMap<Stand, String> mapaStandsPendientes; // Guarda los stands y la id de sus responsables para utilizarlos despues de la carga de zonas & carga de personas.
 	
+	/**
+	 * Carga la listaPersonas y listaZonas de Festival y añade los errores que ocurran durante la carga a errores. 
+	 */
 	public static void cargar_Todo() {
-		/* Carga la listaPersonas y listaZonas de Festival y añade los errores que ocurran durante la carga a errores. */
 		errores = new ArrayList<>(); 
 		cargar_Zonas(); // Se cargan primero las zonas y se crea un mapaStandsPendientes...
 		cargar_Personas(); // ... y se cargan luego las personas, para así poder asignar los comerciantes responsables de cada Stand con las personas ya cargadas.
@@ -34,8 +41,10 @@ public class Cargador_XML {
 		});
 	}
 	
+	/**
+	 * Carga todas las Personas del archivo personas.xml a la listaPersonas de Festival. 
+	 */
 	private static void cargar_Personas() {
-		/* Carga todas las Personas del archivo personas.xml a la listaPersonas de Festival. */
 		try {
 		    File archivo = new File("personas.xml");
 		    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -187,8 +196,13 @@ public class Cargador_XML {
 		}
 	}
 	
+	/**
+	 * Carga los datos principales de la clase base Persona, junto a todos sus accesos.
+	 * @param elemento objeto de clase Element, contiene el elemento del XML de una persona.
+	 * @param persona objeto de la clase Personas, es la persona a la que se le van a agregar los accesos.
+	 * @throws ExcepcionAccesoIncorrecto excepcion extendida de Exception, se lanza cuando hay al menos un error de carga de Acceso a una Zona.
+	 */
 	private static void agregar_AccesosAPersona(Element elemento, Personas persona) throws ExcepcionAccesoIncorrecto{
-		/* Carga los datos principales de la clase base Persona, junto a todos sus accesos. */
 	    String idZonaAcceso;
 	    LocalDate fechaAcceso;
 	    LocalTime horaAcceso;
@@ -219,17 +233,25 @@ public class Cargador_XML {
 		}
 	}
 	
+	/**
+	 * Chequea que se hayan cargado correctamente id y nombre. Si no, añade los errores correspondientes a la lista, especificando
+		 * el tipo de persona y el indice para poder localizarlos.
+	 * @param id objeto de clase String, contiene la ID de la persona leída en el XML.
+	 * @param nombre objeto de clase String, contiene el nombre de la persona leída en el XML.
+	 * @param i variable de tipo primitivo int, contiene el indice del Asistente/Artista/Comerciante/StaffOrganizador.
+	 * @param tipo objeto de clase String, contiene el tipo de persona.
+	 */
 	private static void chequear_Persona(String id, String nombre, int i, String tipo) {
-		/* Chequea que se hayan cargado correctamente id y nombre. Si no, añade los errores correspondientes a la lista, especificando
-		 * el tipo de persona y el indice para poder localizarlos. */ 
 		if(id == null || id.isEmpty())
 			errores.add(tipo + " sin id - indice " + i);
 		if(nombre == null || nombre.isEmpty())
 			errores.add(tipo + " sin nombre - indice " + i);
 	}
 	
+	/**
+	 * Carga todas las Zonas del archivo zonas.xml a la listaZonas de Festival.
+	 */
 	private static void cargar_Zonas() {
-		/* Carga todas las Zonas del archivo zonas.xml a la listaZonas de Festival. */
 		try {
 		    File archivo = new File("zonas.xml");
 		
@@ -375,17 +397,28 @@ public class Cargador_XML {
 		}
 	}
 	
+	/**
+	 * Chequea que se hayan cargado correctamente codigoAlfanumerico y descripcion. Si no, añade los errores correspondientes a la lista, especificando
+		 * el tipo de zona y el indice para poder localizarlos.
+	 * @param codigo objeto de clase String, contiene el codigoAlfanumerico de la zona que se leyó en el XML.
+	 * @param desc objeto de clase String, contiene la descripcion de la zona que se leyó en el XML.
+	 * @param i variable de tipo primitivo int, contiene el índice del Escenario/Stand/ZonaComun/ZonaRestringida.
+	 * @param tipo objeto de tipo String, contiene el tipo de Zona.
+	 */
 	private static void chequear_Zona(String codigo, String desc, int i, String tipo) {
-		/* Chequea que se hayan cargado correctamente codigoAlfanumerico y descripcion. Si no, añade los errores correspondientes a la lista, especificando
-		 * el tipo de zona y el indice para poder localizarlos. */ 
 		if(codigo == null || codigo.isEmpty())
 			errores.add(tipo + " sin codigoAlfanumerico - indice " + i);
 		if(desc == null || desc.isEmpty())
 			errores.add(tipo + " sin descripcion - indice " + i);
 	}
 	
+	/**
+	 * Obtiene la capacidadMaxima en el elemento capacidadMaxima, si no existe este elemento dentro de la Zona, lanza ExcepcionCapacidadIndefinida.
+	 * @param auxCapacidad objeto de clase NodeList, contiene la lista de nodos de "capacidad" de una ZonaRestringida o Escenario
+	 * @return variable de tipo int, capacidad_maxima de la instancia de ZonaRestringida o Escenario cargada.
+	 * @throws ExcepcionCapacidadIndefinida excepcion extendida de Exception, se lanza cuando no se encuentra el elemento "capacidad".
+	 */
 	private static int obtener_capacidadMaxima(NodeList auxCapacidad) throws ExcepcionCapacidadIndefinida{
-		/* Obtiene la capacidadMaxima en el elemento capacidadMaxima, si no existe este elemento dentro de la Zona, lanza ExcepcionCapacidadIndefinida. */
 		if(auxCapacidad.getLength() > 0)
 			/* Si existe capacidadMaxima, la devuelve. */
 			return Integer.parseInt(auxCapacidad.item(0).getTextContent());
@@ -395,6 +428,10 @@ public class Cargador_XML {
 		}
 	}
 	
+	/**
+	 * Obtiene la lista de mensajes de error que ocurrieron durante la carga de datos.
+	 * @return ArrayList<String> de mensajes de error.
+	 */
 	public static ArrayList<String> obtener_Errores(){
 		return errores;
 	}
