@@ -120,7 +120,7 @@ public class Personas{ // En la clase festival manejo las personas. Aca tengo da
 	 * @param fecha objeto de clase LocalDate, contiene la fecha actual.
 	 * @param hora objeto de clase LocalTime, contiene la hora actual.
 	 * @return Zona zona en la que se encuentra la persona
-	 * @throws ExcepcionPersonaSeFue excepcion extendida de Exception, se lanza si la cantidad de minutos de permanencia no coinciden con la fecha & hora del último acceso y la fecha & hora actuales.
+	 * @throws ExcepcionPersonaSeFue excepcion extendida de Exception, se lanza si la cantidad de minutos de permanencia no coinciden con la fecha y hora del último acceso y la fecha y hora actuales.
 	 */
 	public Zona devolver_ZonaConcurrida(LocalDate fecha, LocalTime hora) throws ExcepcionPersonaSeFue {
 		/* Devuelve la zona en la cual la Persona se encuentra actualmente (en la fecha & hora ingresados como parámetro), */
