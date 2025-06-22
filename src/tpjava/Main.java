@@ -5,7 +5,7 @@ import tpjava.zonas.Festival;
 
 
 public class Main {
-	public static void main(String args[]) {  /* MÉTODO PRINCIPAL */
+	public static void main(String[] args) {  /* MÉTODO PRINCIPAL */
 		/* ACA VÁ LA CARGA DE ARCHIVOS. */
 		try {
 		    Festival.devolver_Persona(args[0]).imprime_DatosCompletos(); /* El primer argumento del Main es la id de una persona. */

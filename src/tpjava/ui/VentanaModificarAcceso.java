@@ -11,7 +11,7 @@ import tpjava.excepciones.*;
 import java.util.ArrayList;
 
 public class VentanaModificarAcceso extends JFrame {
-    private JTextField campoID;
+    private JTextField campoID, campoMinutos;
     private JComboBox<String> comboZonaActual;
     private JComboBox<String> comboZonaNueva;
     private JButton botonBuscar, botonModificar, botonCerrar;
@@ -22,19 +22,19 @@ public class VentanaModificarAcceso extends JFrame {
         super("Modificar Acceso de Persona");
         setLayout(new BorderLayout());
 
-        // Panel de ingreso de ID y búsqueda
+        // Panel de ingreso de ID, cantMinutos y búsqueda
         JPanel panelID = new JPanel(new FlowLayout());
         panelID.add(new JLabel("ID de Persona:"));
         campoID = new JTextField(15);
+        campoMinutos = new JTextField();
         panelID.add(campoID);
         botonBuscar = new JButton("Buscar");
         panelID.add(botonBuscar);
         add(panelID, BorderLayout.NORTH);
 
         // Panel de selección de zonas
-        JPanel panelZonas = new JPanel(new GridLayout(2, 2, 10, 10));
+        JPanel panelZonas = new JPanel(new GridLayout(4, 2, 10, 10));
         panelZonas.setBorder(BorderFactory.createTitledBorder("Zonas"));
-
         comboZonaActual = new JComboBox<>();
         comboZonaNueva = new JComboBox<>();
         panelZonas.add(new JLabel("Zona Actual:"));
@@ -42,6 +42,8 @@ public class VentanaModificarAcceso extends JFrame {
         panelZonas.add(new JLabel("Zona Nueva:"));
         panelZonas.add(comboZonaNueva);
         add(panelZonas, BorderLayout.CENTER);
+        add(new JLabel("Minutos a modificar:"));
+        add(campoMinutos);
 
         // Panel de botones
         JPanel panelBotones = new JPanel(new FlowLayout());
@@ -93,6 +95,7 @@ public class VentanaModificarAcceso extends JFrame {
 
         String zonaVieja = (String) comboZonaActual.getSelectedItem();
         String zonaNueva = (String) comboZonaNueva.getSelectedItem();
+        long cantMinutos = Long.parseLong(campoMinutos.getText());
 
         if (zonaVieja == null || zonaNueva == null || zonaVieja.equals(zonaNueva)) {
             JOptionPane.showMessageDialog(this, "Seleccione zonas válidas y diferentes.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -100,7 +103,7 @@ public class VentanaModificarAcceso extends JFrame {
         }
 
         try {
-            Festival.modificarAcceso(personaActual.obtenerID(), zonaVieja, zonaNueva);
+            Festival.modificarAcceso(personaActual.obtenerID(), zonaNueva, cantMinutos);
             JOptionPane.showMessageDialog(this, "Acceso modificado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al modificar acceso: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

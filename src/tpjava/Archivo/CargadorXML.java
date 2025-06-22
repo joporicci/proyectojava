@@ -154,7 +154,7 @@ public class CargadorXML {
 
                             Zona zona = Festival.buscarZonaPorID(codZona);
                             if (zona != null) {
-                                artista.agregarZonaAcceso(zona);
+                                artista.agregarZonaAcceso(zona); 
                             } else {
                                 errores.add("Zona con código " + codZona + " no encontrada para artista " + id);
                             }

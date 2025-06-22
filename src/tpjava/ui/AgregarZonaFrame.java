@@ -80,7 +80,7 @@ public class AgregarZonaFrame extends JFrame {
                     break;
                 case "stand":
                     int capStand = Integer.parseInt(capacidadTexto);
-                    nuevaZona = new Stand(codigo, descripcion, capStand, "", "", null);
+                    nuevaZona = new Stand(codigo, descripcion, capStand, "", null);
                     break;
                 default:
                     throw new IllegalArgumentException("Tipo desconocido");

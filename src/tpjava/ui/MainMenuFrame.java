@@ -18,7 +18,7 @@ public class MainMenuFrame extends JFrame {
         setSize(400, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(7, 1, 10, 10));
+        setLayout(new GridLayout(9, 1, 10, 10));
 
         JButton btnCargarXML = new JButton("Cargar XML");
         JButton btnVerZonas = new JButton("Ver Zonas");
@@ -39,13 +39,13 @@ public class MainMenuFrame extends JFrame {
         // Acciones
         btnCargarXML.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new VentanaCargarXML();
+                new VentanaCargarXml();
             }
         });
 
         btnVerZonas.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new VentanaListaZonas();
+                new VentanaListasZonas();
             }
         });
 
@@ -57,7 +57,7 @@ public class MainMenuFrame extends JFrame {
 
         btnAsignarZona.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new VentanaAsignarZona();
+                new AgregarZonaFrame();
             }
         });
 
@@ -69,7 +69,7 @@ public class MainMenuFrame extends JFrame {
 
         btnGenerarReporte.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new VentanaReporteAccesos();
+                new VentanaModificarAcceso();
             }
         });
 

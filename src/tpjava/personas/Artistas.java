@@ -7,7 +7,7 @@ import tpjava.zonas.ZonaRestringida;
 
 
 public class Artistas extends Personas{  /* NUM: 1 */
-	public Artistas(String id, String name, ZonaRestringida... zonasRestr) throws tpjava.personas.ExcepcionEscenarioNoExiste, ExcepcionEscenarioNoExiste {
+	public Artistas(String id, String name, ZonaRestringida... zonasRestr) throws ExcepcionEscenarioNoExiste {
 		super(id,name);
 		obtenerListaZonas().add(Festival.devolver_Escenario(this));
 		for(ZonaRestringida zonaActual : zonasRestr) 

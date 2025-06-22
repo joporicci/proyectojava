@@ -1,6 +1,9 @@
 package tpjava.misc;
 
 import tpjava.personas.Artistas;
+import tpjava.zonas.Festival;
+import tpjava.excepciones.ExcepcionPersonaNoExiste;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -8,12 +11,12 @@ import java.time.LocalTime;
 public class EventoMusical implements Comparable<EventoMusical> {
     private LocalDate fecha;
     private LocalTime hora;
-    private Artistas artista;
+    private String idArtista;  /* Es la ID y no el artista debido a que si no se dificulta la carga de datos. */
 
-    public EventoMusical(LocalDate f, LocalTime h, Artistas a) {
+    public EventoMusical(LocalDate f, LocalTime h, String idA) {
         fecha = f;
         hora = h;
-        artista = a;
+        idArtista = idA;
     }
 
     public LocalDate obtener_fecha() {
@@ -25,7 +28,13 @@ public class EventoMusical implements Comparable<EventoMusical> {
     }
 
     public Artistas obtener_Artista() {
-        return artista;
+    	try {
+            return (Artistas)Festival.buscarPersonaPorID(idArtista);
+    	}
+    	catch(ExcepcionPersonaNoExiste e) {
+    		System.err.println("ERROR, El artista del evento no se encontro: " + e.getMessage());
+    		return null;
+    	}
     }
 
     @Override

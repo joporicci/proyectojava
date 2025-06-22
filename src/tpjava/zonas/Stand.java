@@ -2,11 +2,10 @@ package tpjava.zonas;
 import tpjava.personas.Comerciantes;
 
 public class Stand extends ZonaRestringida implements Comparable<Stand>{
-	String ID, ubicacion;
+	String ubicacion;
 	Comerciantes comercianteResponsable;
-	public Stand(String cod, String desc, int capMax, String id, String ubi, Comerciantes comerc) {
+	public Stand(String cod, String desc, int capMax, String ubi, Comerciantes comerc) {
 		super(cod,desc,capMax);
-		ID = id;
 		ubicacion = ubi;
 		comercianteResponsable = comerc;
 	}
@@ -19,7 +18,7 @@ public class Stand extends ZonaRestringida implements Comparable<Stand>{
 	}
 		
 	public void mostrar() {
-		System.out.println("CODIGO: " + ID + "\tUBICACION: " + ubicacion + "\tEMPLEADOS: ");
+		System.out.println("CODIGO: " + getCodigoAlfanumerico() + "\tUBICACION: " + ubicacion + "\tEMPLEADOS: ");
 		Festival.mostrar_EmpleadosStand(this);
 		System.out.println("\nCOMERCIANTE RESPONSABLE: " + comercianteResponsable);		
 	}
