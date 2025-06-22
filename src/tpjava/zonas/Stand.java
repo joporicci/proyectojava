@@ -29,6 +29,6 @@ public class Stand extends ZonaRestringida implements Comparable<Stand>{
 		return Integer.valueOf(comercianteResponsable.obtenerNombre()) - Integer.valueOf(otroStand.obtener_Responsable().obtenerNombre());
 	}
 	public Comerciantes obtener_comerciante() {
-		return comerciante; 
+		return comercianteResponsable; 
 	}
 }

@@ -2,20 +2,13 @@ package tpjava.personas;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.Iterator;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import tpjava.zonas.Zona;
-<<<<<<< HEAD
 import tpjava.zonas.ZonaComun;
-
-// En la clase festival manejo las personas. Aca tengo datos indivuales y lista de zonas accesibles
-public class Personas {
-=======
 import tpjava.excepciones.ExcepcionPersonaSeFue;
 
-public class Personas{
->>>>>>> 79c6b0010e54068a078b491e74bf6759d153371d
+public class Personas{ // En la clase festival manejo las personas. Aca tengo datos indivuales y lista de zonas accesibles
 	private String ID, nombre;
 	private LinkedHashSet<Acceso> setAccesos;  /* set de Accesos ordenados por el orden de inserción, por lo que el último acceso es el más reciente. */
 	private ArrayList<Zona> listaZonasAccesibles;
@@ -38,14 +31,9 @@ public class Personas{
 	public String obtenerNombre() {
 		return nombre;
 	}
-	
-<<<<<<< HEAD
-	public void agregarAcceso(String zona, LocalDate fecha, LocalTime hora, float cantMins, boolean estado) {
-		listaAccesos.add(new Acceso(zona,fecha,hora,cantMins,estado));
-=======
+
 	public void agregarAcceso(Zona zona, LocalDate fecha, LocalTime hora, long cantMins, boolean estado) {
 		setAccesos.add(new Acceso(zona,fecha,hora,cantMins,estado));
->>>>>>> 79c6b0010e54068a078b491e74bf6759d153371d
 	}
 	
 	@Override
@@ -56,7 +44,6 @@ public class Personas{
 			return ID.equals(((Personas)o).ID);
 	}
 	
-<<<<<<< HEAD
 	public boolean puedeAcceder(Zona zona) {
 	    
 	    if (zona instanceof ZonaComun)
@@ -70,7 +57,8 @@ public class Personas{
 	    }
 
 	    return false;
-=======
+    }
+
 	public void imprime_DatosCompletos() {
 		System.out.println("\nID: " + ID + "\tNOMBRE: " + nombre + "\n\tLISTA DE ZONAS ACCESIBLES\n");
 		for(Zona zonaActual : listaZonasAccesibles)
@@ -86,6 +74,5 @@ public class Personas{
 			return ultimoAcceso.obtener_Zona();
 		else
 			throw new ExcepcionPersonaSeFue("La ubicacion actual de la persona es indefinida.");
->>>>>>> 79c6b0010e54068a078b491e74bf6759d153371d
 	}
 }
