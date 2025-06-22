@@ -29,7 +29,7 @@ public class EventoMusical implements Comparable<EventoMusical> {
 
     public Artistas obtener_Artista() {
     	try {
-            return (Artistas)Festival.buscarPersonaPorID(idArtista);
+            return (Artistas)Festival.devolver_Persona(idArtista);
     	}
     	catch(ExcepcionPersonaNoExiste e) {
     		System.err.println("ERROR, El artista del evento no se encontro: " + e.getMessage());

@@ -12,19 +12,28 @@ import tpjava.personas.Artistas;
 import tpjava.personas.Comerciantes;
 import tpjava.excepciones.*;
 
-public class Festival {  /* Clase manejadora de zonas & personas */
-	private static TreeMap<Zona, Integer> mapaZonas; /* Almacena TODAS las zonas (ordenadas alfabeticamente segun el codigo) + cantidad de gente que tiene c/u */
-	private static ArrayList<Escenario> listaEscenarios; /* Almacena solo los escenarios, para no tener que buscarlos cada vez que se inicializa un Asistente/Artista */
-	private static ArrayList<Stand> listaStands; /* Almacena solo los Stands, para no tener que buscarlos cada vez que se inicializa un Comerciante */
-	private static ArrayList<Personas> listaPersonas; /* Almacena las personas */
-	public Festival() {
-		mapaZonas = new TreeMap<>();
-		listaEscenarios = new ArrayList<>();
-		listaStands = new ArrayList<>();
-		listaPersonas = new ArrayList<>(); 
+/**
+ * Clase manejadora no instanciable de instancias de Zona y Personas, contiene todos los atributos y métodos para trabajar con las mismas.
+ * @author grupo2
+ */
+public class Festival { 
+	private static TreeMap<Zona, Integer> mapaZonas = new TreeMap<>();; /* Almacena TODAS las zonas (ordenadas alfabeticamente segun el codigo) + cantidad de gente que tiene c/u */
+	private static ArrayList<Escenario> listaEscenarios = new ArrayList<>();; /* Almacena solo los escenarios, para no tener que buscarlos cada vez que se inicializa un Asistente/Artista */
+	private static ArrayList<Stand> listaStands = new ArrayList<>();; /* Almacena solo los Stands, para no tener que buscarlos cada vez que se inicializa un Comerciante */
+	private static ArrayList<Personas> listaPersonas = new ArrayList<>(); ; /* Almacena las personas */
+	
+	/**
+	 * Constructor privado de Festival, su única utilidad es hacerla no instanciable.
+	 */
+	private Festival() {
+		
 	}
+	
+	/**
+	 * Agrega una instancia de Zona a mapaZonas y/o a listaEscenarios o listaStands de Festival.
+	 * @param zonaNueva, objeto de clase Zona, es la zona a agregar.
+	 */
 	public static void agregar_Zona(Zona zonaNueva) {
-		/* Agrega una zona a mapaZonas y/o a listaEscenarios o listaStands de Festival. */
 		mapaZonas.put(zonaNueva,0);
 		if(zonaNueva instanceof Escenario)
 			listaEscenarios.add((Escenario)zonaNueva);
@@ -33,11 +42,20 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 				listaStands.add((Stand)zonaNueva);
 	}
 	
+	/**
+	 * Agrega una instancia de Personas a listaPersonas.
+	 * @param personaNueva
+	 */
 	public static void agregar_Persona(Personas personaNueva) {
-		/* Agrega una persona a listaPersonas de Festival. */
 		listaPersonas.add(personaNueva);
 	}
 	
+	/**
+	 * Devuelve el escenario en donde actúa un artista.
+	 * @param artista instancia de Artistas, contiene al artista que actúa en el escenario buscado.
+	 * @return objeto de clase Escenario, escenario donde actúa artista.
+	 * @throws ExcepcionEscenarioNoExiste excepción extendida de Exception, se lanza cuando no se encuentra el escenario que se busca.
+	 */
 	public static Escenario devolver_Escenario(Artistas artista) throws ExcepcionEscenarioNoExiste {  
 		/* Devuelve la referencia al escenario de el Artista ingresado como parámetro. */
 		Iterator<Escenario> iterador = listaEscenarios.iterator();
@@ -55,11 +73,21 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 			throw new ExcepcionEscenarioNoExiste("No se encontro escenario alguno en el que el artista actue.");
 	}
 	
+	/**
+	 * Devuelve todas las zonas no comunes de Festival en una ArrayList.
+	 * (esto es asi para asi evitar redundancia, ya que a las zonas comunes pueden acceder todos)
+	 * @return instancia de ArrayList<Zona> con todas las zonas no comunes de mapaZonas.
+	 */
 	public static ArrayList<Zona> devolver_TODAS_ZonasNOComunes() {  
-		/* Devuelve una ArrayList con todas las zonas no comunes (esto es asi para asi evitar redundancia, ya que a las zonas comunes pueden acceder todos). */
 		return new ArrayList<Zona>(mapaZonas.keySet());
 	}
 	
+	/**
+	 * Devuelve el Stand en Festival de un responsable cuya id pertenece a la ingresada en los parámetros.
+	 * @param idResponsable objeto de clase String, contiene la id de un comerciante responsable.
+	 * @return instancia de Stand de la que es responsable el comerciante.
+	 * @throws ExcepcionStandNoExiste excepción extendida de Exception, se lanza cuando el Stand con dicho responsable no se encuentra.
+	 */
 	public static Stand devolver_Stand(String idResponsable) throws ExcepcionStandNoExiste {  
 		/* Devuelve el Stand del comerciante cuya ID es ingresada como parámetro. */
 		Iterator<Stand> iterador = listaStands.iterator();
@@ -78,16 +106,29 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 			
 	}
 	
+	/**
+	 * Devuelve una ArrayList con todos los escenarios del Festival.
+	 * @return ArrayList<Escenario> listaEscenarios del Festival.
+	 */
 	public static ArrayList<Escenario> devolver_ListaEscenarios() { 
-		/* Devuelve una lista con todos los Escenarios del festival. */
 		return listaEscenarios;
 	}
 	
+	/**
+	 * Devuelve una ArrayList con todos los Stands del Festival.
+	 * @return ArrayList<Stand> listaStands del Festival.
+	 */
 	public static ArrayList<Stand> devolver_listaStands(){
 		/* Devuelve una lista con todos los Stands del festival. */
 		return listaStands;
 	}
 	
+	/**
+	 * Devuelve la persona en listaPersonas de Festival cuya id ingresada como parámetro le pertenece.
+	 * @param id objeto de clase String, contiene la id de la persona a buscar.
+	 * @return instancia de Personas, persona a buscar
+	 * @throws ExcepcionPersonaNoExiste excepcion extendida de Exception, se lanza cuando la persona buscada no se encuentra en listaPersonas.
+	 */
 	public static Personas devolver_Persona(String id) throws ExcepcionPersonaNoExiste {
 		/* Devuelve la Persona del id ingresado como parámetro; si no se encuentra se lanza una ExcepcionPersonaNoExiste. */
 		Iterator<Personas> iterador = listaPersonas.iterator();
@@ -100,8 +141,12 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 			throw new ExcepcionPersonaNoExiste("Persona no encontrada en la base de datos de Festival.");
 	}
 	
+	/**
+	 * Lista todas las zonas del Festival ordenadas descendentemente por la concurrencia actual.
+	 * @param fechaActual objeto de clase LocalDate, es la fecha actual.
+	 * @param horaActual objeto de clase LocalTime, es la hora actual.
+	 */
 	public static void listar_ZonasPorConcurrencia(LocalDate fechaActual, LocalTime horaActual) {
-		/* Lista todas las zonas descendentemente por concurrencia actual. */
 		int cantTotalPersonas = 0;
 		/* Como los TreeMap ordenan por Key y no por valores, creamos y ordenamos una lista de Entrys. */
 		ArrayList<Map.Entry<Zona, Integer>> listaEntradasZonas = new ArrayList<>(mapaZonas.entrySet());
@@ -114,8 +159,11 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 		System.out.println("\nCANTIDAD TOTAL DE PERSONAS EN EL PREDIO = " + cantTotalPersonas);		
 	}
 	
+	/**
+	 * Muestra una lista con todos los datos de los empleados de la instancia de Stand ingresada como parámetro. 
+	 * @param puesto objeto de clase Stand, es el Stand del cual se quieren mostrar los empleados y sus datos.
+	 */
 	public static void mostrar_EmpleadosStand(Stand puesto) {
-		/* Muestra una lista con los empleados del Stand ingresado como parámetro. */
 		String idResponsable = puesto.obtener_Responsable().obtenerID();
 		for(Personas personaActual : listaPersonas) {
 			/* Recorre la listaPersonas completa. */
@@ -125,26 +173,23 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 		}
 	}
 	
+	/**
+	 * Lista cada uno de los Stands y sus datos ascendentemente por orden alfabético de su código. 
+	 */
 	public static void listar_StandsAlfabeticamente() {  
-		/* Lista cada uno de los Stands ascendentemente por orden alfabético. */
 		ArrayList<Stand> listaStands = devolver_listaStands();  
 		Collections.sort(listaStands);  /* Se ordena la lista Stands ascendentemente */
 		for(Stand standActual : listaStands) // Por cada stand se muestran sus datos completos.
 			standActual.mostrar();
 	}
 
-    public static Personas buscarPersonaPorID(String personaID) throws ExcepcionPersonaNoExiste {
-    	/* Devuelve la persona cuya ID fue ingresada como parámetro. Si no la encuentra, lanza ExcepcionPersonaNoExiste. */
-        for (Personas p : listaPersonas) {
-            if (p.obtenerID().equals(personaID)) {
-                return p;
-            }
-        }
-        throw new ExcepcionPersonaNoExiste("ID de persona no registrado: " + personaID);
-    }
-
+	/** 
+	 * Devuelve la zona cuyo códigoAlfanumérico fue ingresado como parámetro. Si no la encuentra, lanza ExcepciónZonaNoExiste.
+	 * @param zonaID objeto de clase String, es el código de la zona a buscar.
+	 * @return objeto de clase Zona, es la zona que se encontró.
+	 * @throws ExcepcionZonaNoExiste excepcion extendida de Exception, se lanza cuando no se encuentra la zona con ese código.
+	 */
     public static Zona buscarZonaPorID(String zonaID) throws ExcepcionZonaNoExiste {
-    	/* Devuelve la zona cuyo códigoAlfanumérico fue ingresado como parámetro. Si no la encuentra, lanza ExcepciónZonaNoExiste. */
     	ArrayList<Zona> listaZonasAux = new ArrayList<>(mapaZonas.keySet());
     	Iterator<Zona> iterador = listaZonasAux.iterator();
     	Zona aux = listaZonasAux.getFirst();
@@ -176,7 +221,7 @@ public class Festival {  /* Clase manejadora de zonas & personas */
     public static void modificarAcceso(String personaID, String zonaID, long minutos)
             throws ExcepcionPersonaNoExiste, ExcepcionZonaNoExiste {
 
-        Personas persona = buscarPersonaPorID(personaID);
+        Personas persona = devolver_Persona(personaID);
         Zona zona = buscarZonaPorID(zonaID);
         LocalDate fecha = LocalDate.now();
         LocalTime hora = LocalTime.now();
@@ -196,7 +241,7 @@ public class Festival {  /* Clase manejadora de zonas & personas */
     public static void modificarZonaAccesible(String personaID, String zonaActualID, String zonaNuevaID)
             throws ExcepcionPersonaNoExiste, ExcepcionZonaNoExiste {
 
-        Personas persona = buscarPersonaPorID(personaID);
+        Personas persona = devolver_Persona(personaID);
         Zona zonaActual = buscarZonaPorID(zonaActualID);
         Zona zonaNueva = buscarZonaPorID(zonaNuevaID);
 

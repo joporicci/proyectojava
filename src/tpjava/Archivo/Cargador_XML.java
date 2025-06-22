@@ -281,9 +281,9 @@ public class Cargador_XML {
 		    			try {
 		    			    fechaEvento = LocalDate.parse(elementoEvento.getElementsByTagName("fecha").item(0).getTextContent());
 		    			    horaEvento = LocalTime.parse(elementoEvento.getElementsByTagName("hora").item(0).getTextContent());
-		    			    artistaEvento = (Artistas)Festival.buscarPersonaPorID(elementoEvento.getElementsByTagName("idArtista").item(0).getTextContent());
+		    			    artistaEvento = (Artistas)Festival.devolver_Persona(elementoEvento.getElementsByTagName("idArtista").item(0).getTextContent());
 		    			    escenarioAct.agregar_Evento(new EventoMusical(fechaEvento,horaEvento,artistaEvento.obtenerID()));
-		    			}
+		    			} 
 		    			catch(NullPointerException eN) {
 		    				errores.add("Fecha u hora de evento musical no encontrado - indice " + i + "-" + j + "\tERROR: " + eN.getMessage());		    				
 		    			}
