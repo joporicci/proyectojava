@@ -25,6 +25,7 @@ public class Comerciantes extends Personas {  /* NUM: 3 */
 	}
 	
 	public boolean es_EmpleadoDe(String idJefe) {
+		/* Devuelve un valor boolean que es = true si la ID ingresada pertenece al jefe del Comerciante, y que es = false si no. */
 		return IDJefe.equals(idJefe);
 	}
 	

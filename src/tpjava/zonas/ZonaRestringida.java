@@ -7,9 +7,11 @@ public class ZonaRestringida extends Zona {
 		setCapacidad_maxima(capMax);
 	}
 	public int getCapacidad_maxima() {
+		/* Devuelve la capacidad_maxima de la ZonaRestringida. */
 		return this.capacidad_maxima;
 	}
 	public void setCapacidad_maxima(int capMax) {
+		/* Define la capacidad_maxima de la ZonaRestringida. */
 		capacidad_maxima = capMax; 
 	}
 }

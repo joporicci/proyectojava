@@ -4,22 +4,21 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Map;
 import java.util.Iterator;
 import tpjava.personas.Personas;
 import tpjava.personas.Artistas;
 import tpjava.personas.Comerciantes;
-import tpjava.zonas.Stand;
 import tpjava.excepciones.*;
 
 public class Festival {  /* Clase manejadora de zonas & personas */
-	private static HashMap<Zona, Integer> mapaZonas; /* Almacena TODAS las zonas + cantidad de gente que tiene c/u */
+	private static TreeMap<Zona, Integer> mapaZonas; /* Almacena TODAS las zonas (ordenadas alfabeticamente segun el codigo) + cantidad de gente que tiene c/u */
 	private static ArrayList<Escenario> listaEscenarios; /* Almacena solo los escenarios, para no tener que buscarlos cada vez que se inicializa un Asistente/Artista */
 	private static ArrayList<Stand> listaStands; /* Almacena solo los Stands, para no tener que buscarlos cada vez que se inicializa un Comerciante */
 	private static ArrayList<Personas> listaPersonas; /* Almacena las personas */
 	public Festival() {
-		mapaZonas = new HashMap<>();
+		mapaZonas = new TreeMap<>();
 		listaEscenarios = new ArrayList<>();
 		listaStands = new ArrayList<>();
 		listaPersonas = new ArrayList<>(); 
@@ -39,7 +38,8 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 		listaPersonas.add(personaNueva);
 	}
 	
-	public static Escenario devolver_Escenario(Artistas artista) throws ExcepcionEscenarioNoExiste {  /* Devuelve la referencia al escenario de ese artista */
+	public static Escenario devolver_Escenario(Artistas artista) throws ExcepcionEscenarioNoExiste {  
+		/* Devuelve la referencia al escenario de el Artista ingresado como parámetro. */
 		Iterator<Escenario> iterador = listaEscenarios.iterator();
 		Escenario aux = listaEscenarios.getFirst();
 		boolean seEncontro = aux.estaArtista(artista);
@@ -49,19 +49,19 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 			else
 				aux = iterador.next();
 		}
-		if (seEncontro)
+		if (seEncontro) // Si el Artista se encuentra, lo devuelve...
 			return aux;
-		else
+		else // ... si no, lanza una ExcepcionEscenarioNoExiste.
 			throw new ExcepcionEscenarioNoExiste("No se encontro escenario alguno en el que el artista actue.");
 	}
 	
 	public static ArrayList<Zona> devolver_TODAS_ZonasNOComunes() {  
-		/* Devuelve una ArrayList con todas las zonas no comunes, para asi evitar redundancia. */
+		/* Devuelve una ArrayList con todas las zonas no comunes (esto es asi para asi evitar redundancia, ya que a las zonas comunes pueden acceder todos). */
 		return new ArrayList<Zona>(mapaZonas.keySet());
 	}
 	
 	public static Stand devolver_Stand(String idResponsable) throws ExcepcionStandNoExiste {  
-		/* Devuelve el Stand del comerciante ingresado */
+		/* Devuelve el Stand del comerciante cuya ID es ingresada como parámetro. */
 		Iterator<Stand> iterador = listaStands.iterator();
 		Stand aux = listaStands.getFirst();
 		boolean seEncontro = aux.estaResponsable(idResponsable);
@@ -71,9 +71,9 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 			else
 				aux = iterador.next();
 		}
-		if(!seEncontro)
+		if(!seEncontro) // Si el Stand NO se encuentra, se lanza una ExcepcionStandNoExiste...
 			throw new ExcepcionStandNoExiste("El comerciante ingresado no posee un Stand existente!");
-		else
+		else // si no, devuelve el Stand encontrado...
 			return (Stand)aux;
 			
 	}
@@ -89,14 +89,14 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 	}
 	
 	public static Personas devolver_Persona(String id) throws ExcepcionPersonaNoExiste {
-		/* Devuelve la Persona del id ingresado como parámetro; si no se encuentra se tira una ExcepcionPersonaNoExiste. */
+		/* Devuelve la Persona del id ingresado como parámetro; si no se encuentra se lanza una ExcepcionPersonaNoExiste. */
 		Iterator<Personas> iterador = listaPersonas.iterator();
 		Personas auxPersona = listaPersonas.getFirst(), personaBuscada = new Personas(id,"----");
 		while(iterador.hasNext() && !auxPersona.equals(personaBuscada))
 			auxPersona = iterador.next();
-		if(auxPersona.equals(personaBuscada))
+		if(auxPersona.equals(personaBuscada)) // Si la persona encontrada es la persona buscada, la devuelve (se pregunta esto porque igual se podría haber salido del ciclo solamente porque iterador.hasNext() == false.
 			return auxPersona;
-		else
+		else // En cambio, si no lo es, se lanza una ExcepcionPersonaNoExiste.
 			throw new ExcepcionPersonaNoExiste("Persona no encontrada en la base de datos de Festival.");
 	}
 	
@@ -107,18 +107,21 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 		ArrayList<Map.Entry<Zona, Integer>> listaEntradasZonas = new ArrayList<>(mapaZonas.entrySet());
 		listaEntradasZonas.sort(Map.Entry.<Zona, Integer>comparingByValue().reversed()); // Ordenamos cada entrada descendentemente (por eso lo revertimos) comparandolas según su concurrencia.
 		for(Map.Entry<Zona, Integer> entradaActual : listaEntradasZonas) {
+			/* Agregamos la cantidad de personas de la entradaActual a cantTotalPersonas, e imprimimos las zonas en orden descendente según su concurrencia. */
 			cantTotalPersonas += entradaActual.getValue();
-			System.out.println(entradaActual.getKey());
+			System.out.println(entradaActual.getKey().toString());
 		}
 		System.out.println("\nCANTIDAD TOTAL DE PERSONAS EN EL PREDIO = " + cantTotalPersonas);		
 	}
 	
 	public static void mostrar_EmpleadosStand(Stand puesto) {
+		/* Muestra una lista con los empleados del Stand ingresado como parámetro. */
 		String idResponsable = puesto.obtener_Responsable().obtenerID();
 		for(Personas personaActual : listaPersonas) {
-			if(personaActual instanceof Comerciantes)
-				if(((Comerciantes) personaActual).es_EmpleadoDe(idResponsable))
-					System.out.println("* " + personaActual.toString());
+			/* Recorre la listaPersonas completa. */
+			if(personaActual instanceof Comerciantes) // Por cada persona que sea Comerciante...
+				if(((Comerciantes) personaActual).es_EmpleadoDe(idResponsable)) // ... pregunta si esa persona es empleado del puesto ingresado como parámetro...
+					System.out.println("* " + personaActual.toString()); // ... y si lo es, se imprimen sus datos.
 		}
 	}
 	
@@ -126,11 +129,12 @@ public class Festival {  /* Clase manejadora de zonas & personas */
 		/* Lista cada uno de los Stands ascendentemente por orden alfabético. */
 		ArrayList<Stand> listaStands = devolver_listaStands();  
 		Collections.sort(listaStands);  /* Se ordena la lista Stands ascendentemente */
-		for(Stand standActual : listaStands)
+		for(Stand standActual : listaStands) // Por cada stand se muestran sus datos completos.
 			standActual.mostrar();
 	}
 
     public static Personas buscarPersonaPorID(String personaID) throws ExcepcionPersonaNoExiste {
+    	/* Devuelve la persona cuya ID fue ingresada como parámetro. Si no la encuentra, lanza ExcepcionPersonaNoExiste. */
         for (Personas p : listaPersonas) {
             if (p.obtenerID().equals(personaID)) {
                 return p;
@@ -140,6 +144,7 @@ public class Festival {  /* Clase manejadora de zonas & personas */
     }
 
     public static Zona buscarZonaPorID(String zonaID) throws ExcepcionZonaNoExiste {
+    	/* Devuelve la zona cuyo códigoAlfanumérico fue ingresado como parámetro. Si no la encuentra, lanza ExcepciónZonaNoExiste. */
     	ArrayList<Zona> listaZonasAux = new ArrayList<>(mapaZonas.keySet());
     	Iterator<Zona> iterador = listaZonasAux.iterator();
     	Zona aux = listaZonasAux.getFirst();

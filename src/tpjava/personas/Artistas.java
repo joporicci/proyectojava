@@ -16,6 +16,7 @@ public class Artistas extends Personas{  /* NUM: 1 */
 	
 	@Override
 	public String toString() {
+		/* Devuelve el nombre del Artista, para que cuando se quiera pasarlo a String muestre solo éste. */
 		return obtenerNombre();
 	}
 	/* El equals de la clase base se hereda automáticamente. */
