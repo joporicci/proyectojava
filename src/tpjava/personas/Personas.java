@@ -1,5 +1,6 @@
 package tpjava.personas;
 
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Iterator;
@@ -76,7 +77,7 @@ public class Personas{ // En la clase festival manejo las personas. Aca tengo da
 	 */
 	public boolean equals(Object o) {
 		/* Compara a la Persona con otro objeto. */
-		if(o == null || o.getClass() != getClass()) // Si se trata de un objeto de clase distinta, devuelve false.
+		if(o == null || !(o instanceof Personas)) // Si se trata de un objeto de clase distinta, devuelve false.
 			return false; 
 		else // Si se trata de un objeto de clase Personas, devuelve true si tiene la misma ID, y false si no.
 			return ID.equals(((Personas)o).ID);
@@ -101,18 +102,21 @@ public class Personas{ // En la clase festival manejo las personas. Aca tengo da
 
 	    return false;
     }
-
+	
+	@Override
 	/**
-	 * Imprime todos los atributos de la instancia de Personas.
+	 * Devuelve todos los datos importantes de la instancia de Personas en un String.
+	 * @return objeto de clase String, datos importantes de Personas
 	 */
-	public void imprime_DatosCompletos() {
-		/* Imprime todos los datos de la Persona. */
-		System.out.println("\nID: " + ID + "\tNOMBRE: " + nombre + "\n\tLISTA DE ZONAS ACCESIBLES\n");
+	public String toString() {
+		StringBuilder mensaje = new StringBuilder();
+		mensaje.append("\nID: " + ID + "\tNOMBRE: " + nombre + "\n\tLISTA DE ZONAS ACCESIBLES\n");
 		for(Zona zonaActual : listaZonasAccesibles) // Recorre la listaZonasAccesibles e imprime cada Zona de ésta.
-			System.out.println("-> " + zonaActual.toString());
-		System.out.println("\n\tLISTA DE ACCESOS\n");
+			mensaje.append(zonaActual.toString());
+		mensaje.append("\n\tLISTA DE ACCESOS\n");
 		for(Acceso accesoActual : setAccesos) // Recorre el setAcceso e imprime cada Acceso de éste.
-			System.out.println("-> " + accesoActual.toString());
+			mensaje.append(accesoActual.toString());
+		return mensaje.toString();
 	}
 	
 	/**

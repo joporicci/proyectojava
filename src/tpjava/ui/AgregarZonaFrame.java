@@ -51,6 +51,7 @@ public class AgregarZonaFrame extends JFrame {
         });
 
         add(panel);
+        setVisible(true);
     }
 
     private void agregarZona() {

@@ -55,7 +55,7 @@ public class Zona implements Comparable<Zona>{
 	 * @return objeto de clase String, contiene los atributos a mostrar.
 	 */
 	public String toString() {
-		return "CODIGO ALFANUMERICO: " + codigoAlfanumerico + "   DESCRIPCION: " + descripcion;
+		return "\nCODIGO ALFANUMERICO: " + codigoAlfanumerico + "   DESCRIPCION: " + descripcion;
 	}
 	
 	@Override

@@ -1,0 +1,56 @@
+<zonas>
+    <escenarios>
+        <escenario>
+            <codigo>ESC001</codigo> 
+            <descripcion>Escenario Principal</descripcion>
+            <capacidad>5000</capacidad>
+        </escenario>
+        <escenario>
+            <codigo>ESC002</codigo>
+            <descripcion>Escenario Secundario</descripcion>
+            <capacidad>3000</capacidad>
+            
+        </escenario>
+    </escenarios>
+
+    <comunes>
+        <comun>
+            <codigo>ZCOM001</codigo> 
+            <descripcion>Zona de Comida</descripcion>
+        </comun>
+        <comun>
+            <codigo>ZCOM002</codigo>
+            <descripcion>Zona de Descanso</descripcion>
+        </comun>
+    </comunes>
+
+    <restringidas>
+        <restringida>
+            <codigo>RES001</codigo>  
+            <descripcion>Zona VIP</descripcion>
+            <capacidad>100</capacidad>
+        </restringida>
+        <restringida>
+            <codigo>RES002</codigo>  
+            <descripcion>Zona de Artistas</descripcion>
+            <capacidad>50</capacidad>
+        </restringida>
+    </restringidas>
+
+    <stands>
+        <stand>
+            <codigo>ST001</codigo>  
+            <descripcion>Stand de Bebidas</descripcion>
+            <capacidad>10</capacidad>
+            <ubicacion>Sector A</ubicacion>
+            <idResponsable>COM101</idResponsable>
+        </stand>
+        <stand>
+            <codigo>ST002</codigo>
+            <descripcion>Stand de Comida Rápida</descripcion>
+            <capacidad>15</capacidad>
+            <ubicacion>Sector B</ubicacion>
+            <idResponsable>COM102</idResponsable>
+        </stand>
+    </stands>
+</zonas>

@@ -9,7 +9,7 @@ import tpjava.excepciones.ExcepcionStandNoExiste;
  * @author grupo2
  */
 public class Comerciantes extends Personas {  /* NUM: 3 */
-	private String IDJefe;
+	private String IDJefe; // Se pone la ID del jefe y no una referencia a este debido a que presenta dificultades. */
 	/**
 	 * Construye un objeto de clase Comerciantes
 	 * En el caso de que el Comerciante SEA el jefe, el Comerciante es su propio jefe.
@@ -19,7 +19,7 @@ public class Comerciantes extends Personas {  /* NUM: 3 */
 	 * @param zonasRestr varargs de clase ZonaRestringida, contiene las Zonas Restringidas a las que puede acceder el Comerciante.
 	 * @throws ExcepcionStandNoExiste excepción extendida de Exception, se lanza cuando no se encuentra un Stand liderado por un jefe con IDJefe.
 	 */
-	public Comerciantes(String id, String name, String idJefe, ZonaRestringida... zonasRestr) throws ExcepcionStandNoExiste{
+	public Comerciantes(String id, String name, String idJefe, ZonaRestringida... zonasRestr) {
 		/* Si el Comerciante es jefe, IDJefe = id */
 		super(id,name);
 		IDJefe = idJefe;  // Se pone la ID del jefe y no una referencia a este debido a que presenta dificultades. */
@@ -31,8 +31,24 @@ public class Comerciantes extends Personas {  /* NUM: 3 */
 		    obtenerListaZonas().add(Festival.devolver_Stand(IDJefe)); /* Añade el Stand correspondiente al jefe. */
 		}
 		catch(ExcepcionStandNoExiste e) {
-			throw e; /* Si no lo encuentra, se relanza ExcepcionStandNoExiste */
+			System.err.println("ERROR: Stand de comerciante no encontrado.");
 		}
+
+	}
+	
+	/**
+	 * Construye un objeto de clase Comerciantes, es el constructor alternativo por si no se suministra IDJefe.
+	 * @param id objeto de clase String, contiene el identificador del Comerciante.
+	 * @param name objeto de clase String, contiene el nombre del Comerciante.
+	 * @param zonasRestr zonasRestr varargs de clase ZonaRestringida, contiene las Zonas Restringidas a las que puede acceder el Comerciante.
+	 */
+	public Comerciantes(String id, String name, ZonaRestringida... zonasRestr){
+		/* Si el Comerciante es jefe, IDJefe = id */
+		super(id,name);
+		IDJefe = id;  
+		
+		for(ZonaRestringida zona : zonasRestr) /* Añade las zonas restringidas determinadas. */
+	    	obtenerListaZonas().add((Zona)zona);
 
 	}
 	
@@ -47,6 +63,7 @@ public class Comerciantes extends Personas {  /* NUM: 3 */
 	}
 	
 	/* El equals de la clase base se hereda automáticamente. */
+	
 }
 
 

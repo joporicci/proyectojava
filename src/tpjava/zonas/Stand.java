@@ -79,5 +79,13 @@ public class Stand extends ZonaRestringida{
 			/* Si en lugar de compararlo con otro Stand se lo compara con otro tipo de Zona, se emplea el compareTo de la clase Zona. */
 			return super.compareTo(otraZona);
 	}
+	
+	/**
+	 * Cambia el responsable de la instancia de Stand por uno pasado por parámetros.
+	 * @param responsableNuevo objeto de clase Comerciantes, nuevo responsable.
+	 */
+	public void cambiar_Responsable(Comerciantes responsableNuevo) {
+		comercianteResponsable = responsableNuevo;
+	}
 
 }

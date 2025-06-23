@@ -16,7 +16,9 @@ import tpjava.misc.EventoMusical;
 
 import tpjava.excepciones.*;
 import java.lang.NullPointerException;
-
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 /**
  * Clase que contiene los atributos y métodos necesarios para trabajar con los objetos de clase Cargador_XML, cuya función es cargar los datos
  * del programa a partir de un archivo XML.
@@ -25,7 +27,7 @@ import java.lang.NullPointerException;
 public class Cargador_XML {
 	
 	private static ArrayList<String> errores; // Guarda todos los errores que ocurran durante la carga total de los datos.
-	private static HashMap<Stand, String> mapaStandsPendientes; // Guarda los stands y la id de sus responsables para utilizarlos despues de la carga de zonas & carga de personas.
+	private static HashMap<Stand, Comerciantes> mapaStandsPendientes; // Guarda los stands y su comercianteResponsable auxiliar para utilizarlos despues de la carga de zonas & carga de personas.
 	
 	/**
 	 * Carga la listaPersonas y listaZonas de Festival y añade los errores que ocurran durante la carga a errores. 
@@ -34,13 +36,7 @@ public class Cargador_XML {
 		errores = new ArrayList<>(); 
 		cargar_Zonas(); // Se cargan primero las zonas y se crea un mapaStandsPendientes...
 		cargar_Personas(); // ... y se cargan luego las personas, para así poder asignar los comerciantes responsables de cada Stand con las personas ya cargadas.
-		
-		mapaStandsPendientes.forEach((stand,idResponsable) ->{
-			stand.poner_Responsable(idResponsable);
-			Festival.agregar_Zona(stand);
-		});
 	}
-	
 	/**
 	 * Carga todas las Personas del archivo personas.xml a la listaPersonas de Festival. 
 	 */
@@ -88,6 +84,7 @@ public class Cargador_XML {
 		    	NodeList listaIDSZonasR;
 		    	Element elementoZonaR;
 		    	ArrayList<ZonaRestringida> lZonasR;
+		    	ZonaRestringida[] vectorZonasR;
 		    	Artistas artistaAct;
 		    	for(int i = 0; i < listaTipo.getLength(); i++) {
 		    		elemento = (Element) listaTipo.item(i);
@@ -106,22 +103,15 @@ public class Cargador_XML {
 		    		}
 		    		chequear_Persona(id,nombre,i,"Artista");
 		    		artistaAct = null;  // Se inicializa artistaAct en null por si ocurre una excepción durante la inicialización efectiva.
-		    		try{
-		    			artistaAct = new Artistas(id,nombre,(ZonaRestringida[])lZonasR.toArray());
-		    		}
-		    		catch(ExcepcionEscenarioNoExiste e) {
-		    			errores.add("Escenario de Artista no encontrado - indice " + i + "\tERROR: " + e.getMessage());
-		    		}
-		    		if(artistaAct != null)
-		    		    try {
-		    		    	agregar_AccesosAPersona(elemento, artistaAct);
-		    		    }
-		    		    catch(ExcepcionAccesoIncorrecto e) {
-		    			    errores.add(e.getMessage() + "Artista - indice " + i);
-		    		    }
-		    		else
-		    			errores.add("No se pudo inicializar Artista de indice " + i);
-		    		Festival.agregar_Persona(artistaAct);		    			
+		    		vectorZonasR = lZonasR.toArray(new ZonaRestringida[0]);
+		    		artistaAct = new Artistas(id,nombre,vectorZonasR);
+		    		try {
+		    		   	agregar_AccesosAPersona(elemento, artistaAct);
+		    	    }
+		    	    catch(ExcepcionAccesoIncorrecto e) {
+		    		    errores.add(e.getMessage() + "Artista - indice " + i);
+		    	    }
+		    	    Festival.agregar_Persona(artistaAct);	
 		    	}
 		    }
 		    
@@ -131,6 +121,7 @@ public class Cargador_XML {
 		    	NodeList listaIDSZonasR;
 		    	Element elementoZonaR;
 		    	ArrayList<ZonaRestringida> lZonasR;
+		    	ZonaRestringida[] vectorZonasR;
 		    	String idJefe;
 		    	Comerciantes comercianteAct;
 		    	for(int i = 0; i < listaTipo.getLength(); i++) {
@@ -151,23 +142,29 @@ public class Cargador_XML {
 		    			}
 		    		}
 		    		comercianteAct = null; // Se inicializa comercianteAct en null por si ocurre una excepción durante la inicialización efectiva.
-		    		if(idJefe == null || idJefe.isEmpty())
+		    		vectorZonasR = lZonasR.toArray(new ZonaRestringida[0]);
+		    		if(idJefe == null || idJefe.isEmpty()) {
 		    			errores.add("Comerciante sin idJefe, no se puede buscar Stand - indice " + i);
+		    			comercianteAct = new Comerciantes(id,nombre,vectorZonasR);
+		    		}
 		    		else
 		    			try {
-		    				comercianteAct = new Comerciantes(id,nombre,idJefe,(ZonaRestringida[])lZonasR.toArray());
+		    				comercianteAct = new Comerciantes(id,nombre,idJefe,vectorZonasR);
+		    				if (comercianteAct.es_EmpleadoDe(comercianteAct.obtenerID()))
+		    					Festival.devolver_Stand(idJefe).cambiar_Responsable(comercianteAct); // Se reemplaza al comerciante auxiliar del Stand por el verdadero.
 		    			}
 		    		    catch(ExcepcionStandNoExiste e) {
 		    		    	errores.add("Stand de Comerciante no encontrado - indice " + i + "\tERROR: " + e.getMessage());
 		    		    }
 		    		
-		    		try {
-		    		    agregar_AccesosAPersona(elemento,comercianteAct);
-		    		}
-		    		catch(ExcepcionAccesoIncorrecto e) {
-		    			errores.add(e.getMessage() + "Comerciante - indice " + i);
-		    		}
-		    		Festival.agregar_Persona(comercianteAct);
+		    		if(comercianteAct != null)
+		    		    try {
+		    		        agregar_AccesosAPersona(elemento,comercianteAct);
+		    		        Festival.agregar_Persona(comercianteAct);
+		    		    }
+		    		    catch(ExcepcionAccesoIncorrecto e) {
+		    		    	errores.add(e.getMessage() + "Comerciante - indice " + i);
+		    		    }
 		    	}
 		    }
 		    
@@ -191,8 +188,14 @@ public class Cargador_XML {
 		    	}
 		    }
 		}
-		catch(Exception e) {
-			System.out.println("ERROR, No se pudo cargar personas.xml: " + e.getMessage());
+		catch(IOException eIO) {
+			System.err.println("ERROR, No se pudo cargar personas.xml: " + eIO.getMessage());
+		}
+		catch(ParserConfigurationException eParser) {
+			System.err.println("ERROR, No se pudo crear el DocumentBuilder de personas.xml: " + eParser.getMessage());			
+		}
+		catch(SAXException eSAX) {
+			System.err.println("ERROR, personas.xml está mal formado: " + eSAX.getMessage());
 		}
 	}
 	
@@ -213,18 +216,21 @@ public class Cargador_XML {
 	    Element elementoAcceso;
 	    
 		for(int j = 0; j < listaAccesos.getLength(); j++) {
-			elementoAcceso = (Element) listaAccesos.item(j);
-			idZonaAcceso = elementoAcceso.getElementsByTagName("idZona").item(0).getTextContent();
-			fechaAcceso = LocalDate.parse(elementoAcceso.getElementsByTagName("fecha").item(0).getTextContent());
-			horaAcceso = LocalTime.parse(elementoAcceso.getElementsByTagName("hora").item(0).getTextContent());
-			cantMinsAcceso = Long.parseLong(elementoAcceso.getElementsByTagName("cantMins").item(0).getTextContent());
-			estadoAcceso = Boolean.parseBoolean(elementoAcceso.getElementsByTagName("estado").item(0).getTextContent());
 			try {
+			    elementoAcceso = (Element) listaAccesos.item(j);
+			    idZonaAcceso = elementoAcceso.getElementsByTagName("idZona").item(0).getTextContent();
+			    fechaAcceso = LocalDate.parse(elementoAcceso.getElementsByTagName("fecha").item(0).getTextContent());
+			    horaAcceso = LocalTime.parse(elementoAcceso.getElementsByTagName("hora").item(0).getTextContent());
+			    cantMinsAcceso = Long.parseLong(elementoAcceso.getElementsByTagName("cantMins").item(0).getTextContent());
+			    estadoAcceso = Boolean.parseBoolean(elementoAcceso.getElementsByTagName("estado").item(0).getTextContent());
 			    persona.agregarAcceso(Festival.buscarZonaPorID(idZonaAcceso), fechaAcceso, horaAcceso, cantMinsAcceso, estadoAcceso);	
 			}
 			catch(ExcepcionZonaNoExiste e) {
 				errores.add("ERROR, Acceso a zona de indice " +  j + "no encontrada: " + e.getMessage());
 				huboError = true;
+			}
+			catch(NullPointerException ePointer) {
+				errores.add("ERROR, Elemento de Acceso de indice " + j + " no existe: " + ePointer.getMessage());
 			}
 		}
 		
@@ -304,7 +310,13 @@ public class Cargador_XML {
 		    			    fechaEvento = LocalDate.parse(elementoEvento.getElementsByTagName("fecha").item(0).getTextContent());
 		    			    horaEvento = LocalTime.parse(elementoEvento.getElementsByTagName("hora").item(0).getTextContent());
 		    			    artistaEvento = (Artistas)Festival.devolver_Persona(elementoEvento.getElementsByTagName("idArtista").item(0).getTextContent());
-		    			    escenarioAct.agregar_Evento(new EventoMusical(fechaEvento,horaEvento,artistaEvento.obtenerID()));
+		    			    try {
+		    			        escenarioAct.agregar_Evento(new EventoMusical(fechaEvento,horaEvento,artistaEvento.obtenerID()));
+		    			    }
+		    			    catch(ExcepcionEscenarioSuperpuesto eEVENTO) {
+		    			    	errores.add("Advertencia: ya existe un evento musical como el del Escenario de indice " + i + "-" + j + "\tERROR: " + eEVENTO.getMessage());
+		    			    }
+		    			
 		    			} 
 		    			catch(NullPointerException eN) {
 		    				errores.add("Fecha u hora de evento musical no encontrado - indice " + i + "-" + j + "\tERROR: " + eN.getMessage());		    				
@@ -359,6 +371,8 @@ public class Cargador_XML {
 		    	String ubicacion;
 		    	int capacidadMaxima;
 		    	String idResponsable;
+		    	Comerciantes responsableAuxiliar;
+		    	Stand standActual;
 		    	mapaStandsPendientes = new HashMap<>();
 		    	for(int i = 0; i < listaTipo.getLength(); i++) {
 		    		/* Carga de Stands uno por uno... */
@@ -380,9 +394,12 @@ public class Cargador_XML {
 		    			errores.add("Ubicacion de Stand no encontrada - indice " + i);
 		    		
 		    		try {
-		    			/* Se intenta buscar la id del Responsable del Stand, si se lo encuentra se guardan el Stand y idResponsable para asignarlos luego de cargar las personas... */
+		    			/* Se intenta buscar la id del Responsable del Stand, si se lo encuentra se guardan el Stand y se crea un comerciante responsable auxiliar que se reemplaza luego de cargar las personas... */
 		    		    idResponsable = elemento.getElementsByTagName("idResponsable").item(0).getTextContent();
-		    		    mapaStandsPendientes.put(new Stand(codigoAlfanumerico,descripcion,capacidadMaxima,ubicacion,null), idResponsable);
+		    		    responsableAuxiliar = new Comerciantes(idResponsable,"No se sabe.");
+		    		    standActual = new Stand(codigoAlfanumerico,descripcion,capacidadMaxima,ubicacion,responsableAuxiliar);
+		    		    mapaStandsPendientes.put(standActual, responsableAuxiliar);
+		    		    Festival.agregar_Zona(standActual);
 		    		}
 		    		catch(NullPointerException e) {
 		    			/* ... en cambio, si no se la encuentra, se añade un error a la lista errores y se le asigna null a responsable. */
@@ -392,8 +409,14 @@ public class Cargador_XML {
 		    	}
 		    }
 		}
-		catch(Exception e) {
-			System.err.println("ERROR, No se pudo cargar zonas.xml: " + e.getMessage());
+		catch(IOException eIO) {
+			System.err.println("ERROR, No se pudo cargar zonas.xml: " + eIO.getMessage());
+		}
+		catch(ParserConfigurationException eParser) {
+			System.err.println("ERROR, No se pudo crear el DocumentBuilder de zonas.xml: " + eParser.getMessage());			
+		}
+		catch(SAXException eSAX) {
+			System.err.println("ERROR, zonas.xml está mal formado: " + eSAX.getMessage());
 		}
 	}
 	

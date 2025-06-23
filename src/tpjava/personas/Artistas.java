@@ -17,7 +17,7 @@ public class Artistas extends Personas{
 	 * @param zonasRestr varargs de clase ZonaRestringida, contienen las zonasRestringidas a las que puede acceder el Artista.
 	 * @throws ExcepcionEscenarioNoExiste excepción extendida de Exception, se lanza cuando no se encuentra un escenario por artista.
 	 */
-	public Artistas(String id, String name, ZonaRestringida... zonasRestr) throws ExcepcionEscenarioNoExiste {
+	public Artistas(String id, String name, ZonaRestringida... zonasRestr) {
 		super(id,name);
 		for(ZonaRestringida zonaActual : zonasRestr) 
 			obtenerListaZonas().add(zonaActual);
@@ -25,18 +25,10 @@ public class Artistas extends Personas{
 		    obtenerListaZonas().add(Festival.devolver_Escenario(this));
 		}
 		catch(ExcepcionEscenarioNoExiste e) {
-			throw e; // Relanza la ExcepcionEscenarioNoExiste.
+			System.err.println("No se encontro escenario alguno en el que el artista actue.");
 		}
 	}
 	
-	@Override
-	/**
-	 * Devuelve el nombre del Artista, para que cuando se quiera pasarlo a String muestre solo éste.
-	 * @return objeto de clase String, contiene el nombre del Artista.
-	 */
-	public String toString() {
-		return obtenerNombre();
-	}
 	/* El equals de la clase base se hereda automáticamente. */
 }
 

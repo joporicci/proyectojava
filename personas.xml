@@ -1,0 +1,61 @@
+<personas>
+    <asistentes>
+        <asistente>
+            <id>PER101</id>
+            <nombre>Juan Pérez</nombre>
+            <acceso>
+                <idZona>ZCOM001</idZona>
+                <fecha>2023-10-01</fecha>
+                <hora>12:00</hora>
+                <cantMins>120</cantMins>
+                <estado>true</estado>
+            </acceso>
+        </asistente>
+    </asistentes>
+
+    <artistas>
+        <artista>
+            <id>ART201</id>
+            <nombre>Los Rockeros</nombre>
+            <zonaR>
+                <id>RES002</id>
+            </zonaR>
+        </artista>
+    </artistas>
+
+    <comerciantes>
+        <comerciante>
+            <id>COM101</id>
+            <nombre>Pedro Martínez</nombre>
+            <idJefe>COM101</idJefe>
+            <zonaR>
+                <id>RES001</id> 
+            </zonaR>
+        </comerciante>
+
+        <comerciante>
+            <id>COM102</id>
+            <nombre>Pedro Martínez</nombre>
+            <idJefe>COM102</idJefe>
+            <zonaR>
+                <id>RES001</id> 
+            </zonaR>
+        </comerciante>
+
+        <comerciante>
+            <id>COM103</id>
+            <nombre>Pedro Martínez</nombre>
+            <idJefe>COM102</idJefe>
+            <zonaR>
+                <id>RES001</id> 
+            </zonaR>
+        </comerciante>
+    </comerciantes>
+
+    <staffs>
+        <staff>
+            <id>STA001</id>
+            <nombre>Carlos Gómez</nombre>
+        </staff>
+    </staffs>
+</personas>

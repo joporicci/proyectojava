@@ -42,6 +42,7 @@ public class VentanaBuscarPorPersona extends JFrame {
         add(botonCerrar, BorderLayout.SOUTH);
 
         // Acción botón Buscar 
+        setVisible(true);
     }
 
     private void buscarPersona() {

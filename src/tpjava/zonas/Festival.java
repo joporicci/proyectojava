@@ -11,7 +11,7 @@ import tpjava.personas.Personas;
 import tpjava.personas.Artistas;
 import tpjava.personas.Comerciantes;
 import tpjava.excepciones.*;
-
+import java.util.NoSuchElementException;
 /**
  * Clase manejadora no instanciable de instancias de Zona y Personas, contiene todos los atributos y métodos para trabajar con las mismas.
  * @author grupo2
@@ -91,19 +91,28 @@ public class Festival {
 	public static Stand devolver_Stand(String idResponsable) throws ExcepcionStandNoExiste {  
 		/* Devuelve el Stand del comerciante cuya ID es ingresada como parámetro. */
 		Iterator<Stand> iterador = listaStands.iterator();
-		Stand aux = listaStands.getFirst();
-		boolean seEncontro = aux.estaResponsable(idResponsable);
-		while(iterador.hasNext() && !seEncontro) {
-			if(aux.estaResponsable(idResponsable))
-				seEncontro = true;
-			else
-				aux = iterador.next();
+		Stand aux;
+		boolean seEncontro;
+		try {
+			aux = listaStands.getFirst();
+			seEncontro = aux.estaResponsable(idResponsable);
+		    while(iterador.hasNext() && !seEncontro) {
+			    if(aux.estaResponsable(idResponsable))
+			    	seEncontro = true;
+			    else
+				    aux = iterador.next();
+		    }
+		    if(!seEncontro) // Si el Stand NO se encuentra, se lanza una ExcepcionStandNoExiste...
+			    throw new ExcepcionStandNoExiste("El comerciante ingresado no posee un Stand existente!");
+		    else // si no, devuelve el Stand encontrado...
+			    return (Stand)aux;
 		}
-		if(!seEncontro) // Si el Stand NO se encuentra, se lanza una ExcepcionStandNoExiste...
-			throw new ExcepcionStandNoExiste("El comerciante ingresado no posee un Stand existente!");
-		else // si no, devuelve el Stand encontrado...
-			return (Stand)aux;
-			
+		catch(NoSuchElementException eLista) {
+			throw new ExcepcionStandNoExiste("La lista de Stands no se inicializó.");
+		}
+		catch(NullPointerException nP) {
+			throw new ExcepcionStandNoExiste("La lista de Stands se encuentra vacía.");
+		}
 	}
 	
 	/**
@@ -132,13 +141,21 @@ public class Festival {
 	public static Personas devolver_Persona(String id) throws ExcepcionPersonaNoExiste {
 		/* Devuelve la Persona del id ingresado como parámetro; si no se encuentra se lanza una ExcepcionPersonaNoExiste. */
 		Iterator<Personas> iterador = listaPersonas.iterator();
-		Personas auxPersona = listaPersonas.getFirst(), personaBuscada = new Personas(id,"----");
-		while(iterador.hasNext() && !auxPersona.equals(personaBuscada))
-			auxPersona = iterador.next();
-		if(auxPersona.equals(personaBuscada)) // Si la persona encontrada es la persona buscada, la devuelve (se pregunta esto porque igual se podría haber salido del ciclo solamente porque iterador.hasNext() == false.
-			return auxPersona;
-		else // En cambio, si no lo es, se lanza una ExcepcionPersonaNoExiste.
-			throw new ExcepcionPersonaNoExiste("Persona no encontrada en la base de datos de Festival.");
+		try {
+		    Personas auxPersona = listaPersonas.getFirst(), personaBuscada = new Personas(id,"----");
+		    while(iterador.hasNext() && !auxPersona.equals(personaBuscada))
+			    auxPersona = iterador.next();
+		    if(auxPersona.equals(personaBuscada)) // Si la persona encontrada es la persona buscada, la devuelve (se pregunta esto porque igual se podría haber salido del ciclo solamente porque iterador.hasNext() == false.
+			    return auxPersona;
+		    else // En cambio, si no lo es, se lanza una ExcepcionPersonaNoExiste.
+			    throw new ExcepcionPersonaNoExiste("Persona no encontrada en la base de datos de Festival.");
+		}
+		catch(NoSuchElementException eLista) {
+			throw new ExcepcionPersonaNoExiste("La lista de personas de Festival no fue inicializada.");				
+		}
+		catch(NullPointerException ePointer) {
+			throw new ExcepcionPersonaNoExiste("La lista de personas de Festival está vacía.");
+		}
 	}
 	
 	/**
@@ -146,17 +163,19 @@ public class Festival {
 	 * @param fechaActual objeto de clase LocalDate, es la fecha actual.
 	 * @param horaActual objeto de clase LocalTime, es la hora actual.
 	 */
-	public static void listar_ZonasPorConcurrencia(LocalDate fechaActual, LocalTime horaActual) {
+	public static String lista_ZonasPorConcurrencia(LocalDate fechaActual, LocalTime horaActual) {
 		int cantTotalPersonas = 0;
+		StringBuilder mensaje = new StringBuilder();
 		/* Como los TreeMap ordenan por Key y no por valores, creamos y ordenamos una lista de Entrys. */
 		ArrayList<Map.Entry<Zona, Integer>> listaEntradasZonas = new ArrayList<>(mapaZonas.entrySet());
 		listaEntradasZonas.sort(Map.Entry.<Zona, Integer>comparingByValue().reversed()); // Ordenamos cada entrada descendentemente (por eso lo revertimos) comparandolas según su concurrencia.
 		for(Map.Entry<Zona, Integer> entradaActual : listaEntradasZonas) {
 			/* Agregamos la cantidad de personas de la entradaActual a cantTotalPersonas, e imprimimos las zonas en orden descendente según su concurrencia. */
 			cantTotalPersonas += entradaActual.getValue();
-			System.out.println(entradaActual.getKey().toString());
+			mensaje.append(entradaActual.getKey().toString());
 		}
-		System.out.println("\nCANTIDAD TOTAL DE PERSONAS EN EL PREDIO = " + cantTotalPersonas);		
+		mensaje.append("\nCANTIDAD TOTAL DE PERSONAS EN EL PREDIO = " + cantTotalPersonas);		
+		return mensaje.toString();
 	}
 	
 	/**

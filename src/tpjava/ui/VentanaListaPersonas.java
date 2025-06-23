@@ -6,7 +6,7 @@ import tpjava.zonas.Festival;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-
+import tpjava.excepciones.*;
 public class VentanaListaPersonas extends JFrame {
 
     
@@ -15,8 +15,8 @@ public class VentanaListaPersonas extends JFrame {
     
 	// Constructor de posiciones, texto, posicion relativa, forma de cerrar
     public VentanaListaPersonas() {
-        setTitle("Lista de Personas");
-        setSize(400, 400);
+        setTitle("Ingresar ID de persona a mostrar los datos");
+        setSize(1000 , 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         initUI();
@@ -27,10 +27,6 @@ public class VentanaListaPersonas extends JFrame {
     	
         JPanel panel = new JPanel(new BorderLayout());
 
-        JLabel label = new JLabel("Personas cargadas en el sistema:");
-        label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        panel.add(label, BorderLayout.NORTH);
-
         textArea = new JTextArea();
         textArea.setEditable(false);
         JScrollPane scroll = new JScrollPane(textArea);
@@ -38,28 +34,24 @@ public class VentanaListaPersonas extends JFrame {
 
         JButton btnCerrar = new JButton("Cerrar");
         btnCerrar.addActionListener(e -> dispose());
+        
+        String idPersonaBuscar = JOptionPane.showInputDialog(this,"Ingresar ID de la persona a buscar:");
+        
         JPanel btnPanel = new JPanel();
         btnPanel.add(btnCerrar);
         panel.add(btnPanel, BorderLayout.SOUTH);
-
-        cargarPersonas();
+        
+        mostrarPersona(idPersonaBuscar.trim());
         add(panel);
+        setVisible(true);
+
     }
 
-    private void cargarPersonas() {
+    private void mostrarPersona(String id) {
         try {
-            ArrayList<Personas> personas = Festival.devolverListaPersonas();
-            if (personas.isEmpty()) {
-                textArea.setText("No hay personas cargadas.");
-            } else {
-                StringBuilder sb = new StringBuilder();
-                for (Personas p : personas) {
-                    sb.append("ID: ").append(p.obtenerID())
-                      .append(" | Nombre: ").append(p.obtenerNombre()).append("\n");
-                }
-                textArea.setText(sb.toString());
-            }
-        } catch (Exception e) {
+            Personas p = Festival.devolver_Persona(id);
+            textArea.setText(p.toString());
+        } catch (ExcepcionPersonaNoExiste e) {
             textArea.setText("Error al cargar personas: " + e.getMessage());
         }
     }

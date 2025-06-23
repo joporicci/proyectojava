@@ -1,7 +1,9 @@
 package tpjava.zonas;
 import tpjava.misc.EventoMusical;
+
 import tpjava.personas.Artistas;
 import tpjava.excepciones.ExcepcionEscenarioSuperpuesto;
+import java.util.NoSuchElementException;
 
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -34,13 +36,19 @@ public class Escenario extends Zona {
      */
 	public boolean estaArtista(Artistas artista) {
 		Iterator<EventoMusical> iterador = setEventos.iterator();
-		EventoMusical auxActual = setEventos.first();
+		EventoMusical auxActual;
 		boolean seEncontro = false;
-		while(iterador.hasNext() && !seEncontro) {
-			seEncontro = auxActual.obtener_Artista().equals(artista);
-			auxActual = iterador.next();
+		try {
+			auxActual = setEventos.first();
+		    while(iterador.hasNext() && !seEncontro) {
+			    seEncontro = auxActual.obtener_Artista().equals(artista);
+			    auxActual = iterador.next();
+		    }
+		    return seEncontro;
 		}
-		return seEncontro;
+		catch(NoSuchElementException eElemento) {
+			return false;
+		}
 	}
 
 	/**

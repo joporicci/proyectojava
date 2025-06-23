@@ -38,7 +38,7 @@ public class Acceso {
 	 * @return objeto de clase String, contiene los atributos que mejor identifican al Acceso.
 	 */
 	public String toString() {
-		return "ZONA: " + zona.toString() + "  FECHA y HORA: " + fecha.toString() + " " + hora.toString() + "  CANTIDAD MINUTOS: " + cantidad_minutos + "  AUTORIZADO:  " + Boolean.toString(estado); 
+		return zona.toString() + "  FECHA y HORA: " + fecha.toString() + " " + hora.toString() + "  CANTIDAD MINUTOS: " + cantidad_minutos + "  AUTORIZADO:  " + Boolean.toString(estado); 
 	}
 	
 	/**
