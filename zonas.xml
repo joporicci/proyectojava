@@ -4,12 +4,21 @@
             <codigo>ESC001</codigo> 
             <descripcion>Escenario Principal</descripcion>
             <capacidad>5000</capacidad>
+            <evento>
+               <fecha>2023-10-01</fecha>
+               <hora>13:00</hora>
+               <idArtista>ART201</idArtista>
+            </evento>
         </escenario>
         <escenario>
             <codigo>ESC002</codigo>
             <descripcion>Escenario Secundario</descripcion>
             <capacidad>3000</capacidad>
-            
+            <evento>
+                <fecha>2023-11-15</fecha>
+                <hora>21:00</hora>
+                <idArtista>ART201</idArtista>
+            </evento>
         </escenario>
     </escenarios>
 

@@ -16,7 +16,7 @@
     <artistas>
         <artista>
             <id>ART201</id>
-            <nombre>Los Rockeros</nombre>
+            <nombre>Gustavo Cerati</nombre>
             <zonaR>
                 <id>RES002</id>
             </zonaR>
@@ -35,7 +35,7 @@
 
         <comerciante>
             <id>COM102</id>
-            <nombre>Pedro Martínez</nombre>
+            <nombre>Carlos Moreti</nombre>
             <idJefe>COM102</idJefe>
             <zonaR>
                 <id>RES001</id> 
@@ -44,7 +44,7 @@
 
         <comerciante>
             <id>COM103</id>
-            <nombre>Pedro Martínez</nombre>
+            <nombre>Juan Caballero</nombre>
             <idJefe>COM102</idJefe>
             <zonaR>
                 <id>RES001</id> 

@@ -17,8 +17,8 @@ public class VentanaListasZonas extends JFrame {
     public VentanaListasZonas() {
     	JPanel panelEntrada = new JPanel();
     	panelEntrada.setLayout(new FlowLayout());
-        setTitle("Listado de Zonas");
-        setSize(1000, 400);
+        setTitle("Listar Zonas x concurrencia en hora");
+        setSize(1000, 700);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 

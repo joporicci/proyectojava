@@ -103,4 +103,18 @@ public class Escenario extends Zona {
 		for(EventoMusical eventoActual : setEventos)
 			System.out.println(eventoActual.toString());
 	}
+	
+	@Override
+	/**
+	 * Devuelve un String con los datos más importantes de un Escenario.
+	 * @return objeto de clase String, contienen los datos principales del escenario (codigo y descripcion), los datos de cada uno de sus eventos y la capacidad máxima del escenario.
+	 */
+	public String toString() {
+		StringBuilder cadena = new StringBuilder();
+		cadena.append(super.toString() + "\tLISTA DE EVENTOS:\n");
+		for(EventoMusical eventoAct : setEventos)
+			cadena.append("- " + eventoAct.toString());
+		cadena.append("\n\tCAPACIDAD MÁXIMA: " + capacidadMaxima);
+		return cadena.toString();
+	}
 }

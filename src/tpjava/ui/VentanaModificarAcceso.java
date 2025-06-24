@@ -3,6 +3,9 @@ package tpjava.ui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalTime;
+import java.time.LocalDate;
+
 import tpjava.zonas.Festival;
 import tpjava.personas.Personas;
 import tpjava.zonas.Zona;
@@ -11,11 +14,11 @@ import tpjava.excepciones.*;
 import java.util.ArrayList;
 
 public class VentanaModificarAcceso extends JFrame {
-    private JTextField campoID, campoMinutos;
+    private JTextField campoID, campoMinutos, campoFecha, campoHora;
     private JComboBox<String> comboZonaActual;
     private JComboBox<String> comboZonaNueva;
     private JButton botonBuscar, botonModificar, botonCerrar;
-
+    JPanel panelZonas;
     private Personas personaActual;
 
     public VentanaModificarAcceso() {
@@ -23,57 +26,70 @@ public class VentanaModificarAcceso extends JFrame {
         setLayout(new BorderLayout());
 
         // Panel de ingreso de ID, cantMinutos y búsqueda
-        JPanel panelID = new JPanel(new FlowLayout());
+        JPanel panelID = new JPanel(new GridLayout(4,4,10,10));
         panelID.add(new JLabel("ID de Persona:"));
         campoID = new JTextField(15);
-        campoMinutos = new JTextField();
         panelID.add(campoID);
         botonBuscar = new JButton("Buscar");
         panelID.add(botonBuscar);
         add(panelID, BorderLayout.NORTH);
+        
+        botonBuscar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		cargarPersona();
+        	}
+        });
 
         // Panel de selección de zonas
-        JPanel panelZonas = new JPanel(new GridLayout(4, 2, 10, 10));
+        panelZonas = new JPanel(new GridLayout(12, 4, 10, 5));
         panelZonas.setBorder(BorderFactory.createTitledBorder("Zonas"));
+        campoMinutos = new JTextField(5);
+        campoFecha = new JTextField(15);
+        campoHora = new JTextField(10);
         comboZonaActual = new JComboBox<>();
         comboZonaNueva = new JComboBox<>();
+        botonModificar = new JButton("Modificar Acceso");
+        botonCerrar = new JButton("Cerrar");
         panelZonas.add(new JLabel("Zona Actual:"));
         panelZonas.add(comboZonaActual);
         panelZonas.add(new JLabel("Zona Nueva:"));
         panelZonas.add(comboZonaNueva);
-        add(panelZonas, BorderLayout.CENTER);
-        add(new JLabel("Minutos a modificar:"));
-        add(campoMinutos);
+        panelZonas.add(new JLabel("Minutos a modificar: "));
+        panelZonas.add(campoMinutos);
+        panelZonas.add(new JLabel ("Ingrese fecha (AÑO-MES-DIA):"));
+        panelZonas.add(campoFecha);
+        panelZonas.add(new JLabel("Ingrese hora (HORA:MINUTOS):"));
+        panelZonas.add(campoHora);
+        panelZonas.add(botonModificar);
+        panelZonas.add(botonCerrar);
+        add(panelZonas, BorderLayout.SOUTH);
+        
 
-        // Panel de botones
-        JPanel panelBotones = new JPanel(new FlowLayout());
-        botonModificar = new JButton("Modificar Acceso");
-        botonCerrar = new JButton("Cerrar");
-        panelBotones.add(botonModificar);
-        panelBotones.add(botonCerrar);
-        add(panelBotones, BorderLayout.SOUTH);
+
 
         // Eventos
-        botonBuscar.addActionListener(e -> cargarPersona());
         botonModificar.addActionListener(e -> modificarAcceso());
         botonCerrar.addActionListener(e -> dispose());
 
-        setSize(400, 250);
+        setSize(400, 600);
         setLocationRelativeTo(null);
         setVisible(true);
+        
+        panelZonas.setVisible(false);
     }
 
     private void cargarPersona() {
         String id = campoID.getText().trim();
-        if (id.isEmpty()) {
+        if (id == null || id.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese un ID de persona", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         try {
             personaActual = Festival.devolver_Persona(id);
+            JOptionPane.showMessageDialog(this, "Persona encontrada: " + personaActual.obtenerNombre(), "Aviso", JOptionPane.INFORMATION_MESSAGE);
             comboZonaActual.removeAllItems();
-            for (Zona zona : personaActual.obtenerListaZonas()) {
+            for (Zona zona : personaActual.obtenerSetZonas()) {
                 comboZonaActual.addItem(zona.getCodigoAlfanumerico());
             }
 
@@ -81,6 +97,8 @@ public class VentanaModificarAcceso extends JFrame {
             for (Zona zona : Festival.devolver_TODAS_ZonasNOComunes()) {
                 comboZonaNueva.addItem(zona.getCodigoAlfanumerico());
             }
+            
+            panelZonas.setVisible(true);
 
         } catch (ExcepcionPersonaNoExiste ex) {
             JOptionPane.showMessageDialog(this, "Persona no encontrada: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -103,9 +121,9 @@ public class VentanaModificarAcceso extends JFrame {
         }
 
         try {
-            Festival.modificarAcceso(personaActual.obtenerID(), zonaNueva, cantMinutos);
+            Festival.modificarAcceso(personaActual.obtenerID(), zonaNueva, cantMinutos, LocalDate.parse(campoFecha.getText()), LocalTime.parse(campoHora.getText()));
             JOptionPane.showMessageDialog(this, "Acceso modificado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception ex) {
+        } catch (ExcepcionAccesoIncorrecto ex) {
             JOptionPane.showMessageDialog(this, "Error al modificar acceso: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

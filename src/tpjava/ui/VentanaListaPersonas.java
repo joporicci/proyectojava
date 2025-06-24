@@ -50,7 +50,7 @@ public class VentanaListaPersonas extends JFrame {
     private void mostrarPersona(String id) {
         try {
             Personas p = Festival.devolver_Persona(id);
-            textArea.setText(p.toString());
+            textArea.setText(p.devolver_muestra());
         } catch (ExcepcionPersonaNoExiste e) {
             textArea.setText("Error al cargar personas: " + e.getMessage());
         }

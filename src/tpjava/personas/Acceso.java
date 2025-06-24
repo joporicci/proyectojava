@@ -1,6 +1,7 @@
 package tpjava.personas;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.TemporalUnit;
 import tpjava.zonas.Zona;
 
 /**
@@ -48,9 +49,8 @@ public class Acceso {
 	 * @return boolean true (cuando la persona se encuentra en la zona) o false (en el caso opuesto).
 	 */
 	public boolean es_enLaHora(LocalDate f, LocalTime h) {
-		return hora.equals(h.minusMinutes(cantidad_minutos)) && fecha.equals(f);
+		return (hora.isBefore(h) && h.isBefore(hora.plusMinutes(cantidad_minutos))) || h.equals(hora.plusMinutes(cantidad_minutos)) && fecha.equals(f);
 	}
-	
 	/**
 	 * Devuelve el atributo zona del objeto de clase Acceso
 	 * @return Zona zona (atributo de Acceso)

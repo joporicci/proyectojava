@@ -14,7 +14,7 @@ import java.time.LocalTime;
 public class EventoMusical implements Comparable<EventoMusical> {
     private LocalDate fecha;
     private LocalTime hora;
-    private String idArtista;  /* Es la ID y no el artista debido a que si no se dificulta la carga de datos. */
+    private Artistas artista;
 
     /**
      * Construye un objeto de clase EventoMusical.
@@ -22,10 +22,10 @@ public class EventoMusical implements Comparable<EventoMusical> {
      * @param h objeto de clase LocalTime, contiene la hora del evento musical.
      * @param idA objeto de clase String, contiene el id del Artista que actúa en el evento musical.
      */
-    public EventoMusical(LocalDate f, LocalTime h, String idA) {
+    public EventoMusical(LocalDate f, LocalTime h, Artistas a) {
         fecha = f;
         hora = h;
-        idArtista = idA;
+        artista = a;
     }
 
     /**
@@ -49,15 +49,17 @@ public class EventoMusical implements Comparable<EventoMusical> {
      * @return objeto de clase Artistas, contiene el artista al que le pertenece la idArtista.
      */
     public Artistas obtener_Artista() {
-    	try {
-            return (Artistas)Festival.devolver_Persona(idArtista);
-    	}
-    	catch(ExcepcionPersonaNoExiste e) {
-    		System.err.println("ERROR, El artista del evento no se encontro: " + e.getMessage());
-    		return null;
-    	}
+    	return artista;
     }
 
+    /**
+     * Reemplaza el artista actual de la instancia de EventoMusical por otro, útil en el Cargador_XML.
+     * @param a objeto de clase Artistas, es el artista por el cual se reemplazara el artista de está instancia.
+     */
+    public void reemplazar_Artista(Artistas a) {
+    	artista = a;
+    }
+    
     @Override
     /**
      * Devuelve la diferencia de un EventoMusical con otro.
@@ -67,7 +69,7 @@ public class EventoMusical implements Comparable<EventoMusical> {
     public int compareTo(EventoMusical otro) {
         int compFecha = this.fecha.compareTo(otro.fecha);
         if (compFecha != 0) return compFecha;
-        return this.hora.compareTo(otro.hora);
+            return this.hora.compareTo(otro.hora);
     }
 
     @Override
@@ -77,7 +79,8 @@ public class EventoMusical implements Comparable<EventoMusical> {
      * @return valor de tipo primitivo boolean, true si son iguales, false si no lo son.
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof EventoMusical)) return false;
+        if (!(obj instanceof EventoMusical)) 
+        	return false;
         EventoMusical otro = (EventoMusical) obj;
         return fecha.equals(otro.fecha) && hora.equals(otro.hora);
     }
@@ -88,6 +91,15 @@ public class EventoMusical implements Comparable<EventoMusical> {
      * @return valor de tipo primitivo int, hashCode de la instancia de EventoMusical sobre la que se trabaja.
      */
     public int hashCode() {
-        return fecha.hashCode() + hora.hashCode();
+        return fecha.hashCode() + hora.hashCode() + artista.hashCode();
+    }
+    
+    @Override
+    /**
+     * Devuelve un String con los datos más importantes del evento musical.
+     * @return objeto de clase String, contiene la fecha, hora y los datos del artista de la instancia de EventoMusical.
+     */
+    public String toString() {
+    	return "FECHA: " + fecha + "\tHORA: " + hora + "\t\tARTISTA: " + artista.toString();
     }
 }

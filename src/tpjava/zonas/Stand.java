@@ -55,12 +55,15 @@ public class Stand extends ZonaRestringida{
 	}
 		
 	/**
-	 * Muestra el codigoAlfanumerico, la ubicacion, los empleados y el comercianteResponsable de un Stand.
+	 * Devuelve en un String el codigoAlfanumerico, la ubicacion, los empleados y el comercianteResponsable de un Stand.
+	 * @return objeto de clase String, contiene los datos más importantes de un Stand.
 	 */
-	public void mostrar() {
-		System.out.println("CODIGO: " + getCodigoAlfanumerico() + "\tUBICACION: " + ubicacion + "\tEMPLEADOS: ");
-		Festival.mostrar_EmpleadosStand(this);
-		System.out.println("\nCOMERCIANTE RESPONSABLE: " + comercianteResponsable);		
+	public String toString() {
+		StringBuilder mensaje = new StringBuilder();
+		mensaje.append("\nCODIGO ALFANUMÉRICO: " + getCodigoAlfanumerico() + "\tUBICACION: " + ubicacion + "\n LISTA DE EMPLEADOS: ");
+		mensaje.append(Festival.lista_EmpleadosStand(this));
+		mensaje.append("\n\tCOMERCIANTE RESPONSABLE: " + comercianteResponsable.toString() + "\n\n"); // No se usa el toString de comercianteResponsable para evitar un bucle infinito de recursión.		
+		return mensaje.toString();
 	}
 	
 	@Override

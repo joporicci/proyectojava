@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.TreeSet;
 import java.util.Map;
 import java.util.Iterator;
 import tpjava.personas.Personas;
@@ -17,7 +18,7 @@ import java.util.NoSuchElementException;
  * @author grupo2
  */
 public class Festival { 
-	private static TreeMap<Zona, Integer> mapaZonas = new TreeMap<>();; /* Almacena TODAS las zonas (ordenadas alfabeticamente segun el codigo) + cantidad de gente que tiene c/u */
+	private static TreeSet<Zona> setZonas = new TreeSet<>();; /* Almacena TODAS las zonas (ordenadas alfabeticamente segun el codigo) */
 	private static ArrayList<Escenario> listaEscenarios = new ArrayList<>();; /* Almacena solo los escenarios, para no tener que buscarlos cada vez que se inicializa un Asistente/Artista */
 	private static ArrayList<Stand> listaStands = new ArrayList<>();; /* Almacena solo los Stands, para no tener que buscarlos cada vez que se inicializa un Comerciante */
 	private static ArrayList<Personas> listaPersonas = new ArrayList<>(); ; /* Almacena las personas */
@@ -26,7 +27,6 @@ public class Festival {
 	 * Constructor privado de Festival, su única utilidad es hacerla no instanciable.
 	 */
 	private Festival() {
-		
 	}
 	
 	/**
@@ -34,7 +34,7 @@ public class Festival {
 	 * @param zonaNueva, objeto de clase Zona, es la zona a agregar.
 	 */
 	public static void agregar_Zona(Zona zonaNueva) {
-		mapaZonas.put(zonaNueva,0);
+		setZonas.add(zonaNueva);
 		if(zonaNueva instanceof Escenario)
 			listaEscenarios.add((Escenario)zonaNueva);
 		else
@@ -59,18 +59,24 @@ public class Festival {
 	public static Escenario devolver_Escenario(Artistas artista) throws ExcepcionEscenarioNoExiste {  
 		/* Devuelve la referencia al escenario de el Artista ingresado como parámetro. */
 		Iterator<Escenario> iterador = listaEscenarios.iterator();
-		Escenario aux = listaEscenarios.getFirst();
-		boolean seEncontro = aux.estaArtista(artista);
-		while(iterador.hasNext() && !seEncontro) {
-			if(aux.estaArtista(artista))
-				seEncontro = true;
-			else
-				aux = iterador.next();
+		Escenario aux;
+		boolean seEncontro = false;
+		try {
+			aux = listaEscenarios.getFirst();
+		    while(iterador.hasNext() && !seEncontro) {
+			    if(aux.estaArtista(artista))
+			    	seEncontro = true;
+			    else
+				    aux = iterador.next();
+		    }
+		    if (seEncontro || aux.estaArtista(artista)) // Si el Artista se encuentra en el ciclo de busqueda o en el último nodo, lo devuelve...
+			    return aux;
+		    else // ... si no, lanza una ExcepcionEscenarioNoExiste.
+			    throw new ExcepcionEscenarioNoExiste("No se encontro escenario alguno en el que el artista actue.");
 		}
-		if (seEncontro) // Si el Artista se encuentra, lo devuelve...
-			return aux;
-		else // ... si no, lanza una ExcepcionEscenarioNoExiste.
-			throw new ExcepcionEscenarioNoExiste("No se encontro escenario alguno en el que el artista actue.");
+		catch(NoSuchElementException eElemento) {
+			throw new ExcepcionEscenarioNoExiste("No hay ningún escenario en el Festival.");
+		}
 	}
 	
 	/**
@@ -78,8 +84,8 @@ public class Festival {
 	 * (esto es asi para asi evitar redundancia, ya que a las zonas comunes pueden acceder todos)
 	 * @return instancia de ArrayList<Zona> con todas las zonas no comunes de mapaZonas.
 	 */
-	public static ArrayList<Zona> devolver_TODAS_ZonasNOComunes() {  
-		return new ArrayList<Zona>(mapaZonas.keySet());
+	public static TreeSet<Zona> devolver_TODAS_ZonasNOComunes() {  
+		return new TreeSet<Zona>(setZonas);
 	}
 	
 	/**
@@ -95,14 +101,14 @@ public class Festival {
 		boolean seEncontro;
 		try {
 			aux = listaStands.getFirst();
-			seEncontro = aux.estaResponsable(idResponsable);
+			seEncontro = false;
 		    while(iterador.hasNext() && !seEncontro) {
 			    if(aux.estaResponsable(idResponsable))
 			    	seEncontro = true;
 			    else
 				    aux = iterador.next();
 		    }
-		    if(!seEncontro) // Si el Stand NO se encuentra, se lanza una ExcepcionStandNoExiste...
+		    if(!seEncontro && !aux.estaResponsable(idResponsable)) // Si el Stand NO se encuentra en el ciclo ni en el último nodo, se lanza una ExcepcionStandNoExiste...
 			    throw new ExcepcionStandNoExiste("El comerciante ingresado no posee un Stand existente!");
 		    else // si no, devuelve el Stand encontrado...
 			    return (Stand)aux;
@@ -159,6 +165,30 @@ public class Festival {
 	}
 	
 	/**
+	 * Devuelve un HashMap con todas las zonas del Festival como claves, vinculadas cada una a la cantidad de gente que tienen en el momento como valores.	
+	 * @param fechaActual objeto de clase LocalDame, es la fecha en la que se consultan las concurrencias.
+	 * @param horaActual objeto de clase LocalTime, es la hora en la que se consultan las concurrencias.
+	 * @return objeto colección de clase HashMap<Zona, Integer>, es el mapa con las zonas y cada una de sus concurrencias en el Festival.
+	 */
+	public static HashMap<Zona, Integer> devolverMapaConcurrencias (LocalDate fechaActual, LocalTime horaActual){
+		HashMap<Zona, Integer> mapaContadorConcurrencias = new HashMap<>();
+		Zona zonaActual; // La zona actual en el momento de agregar concurrencias a cada zona.
+		setZonas.forEach((zona) -> {
+			mapaContadorConcurrencias.put(zona, 0);  // Inicializamos mapaContadorConcurrencias con cada zona en concurrencia = 0.
+		});
+		for(Personas persona : listaPersonas)
+			try {
+				zonaActual = persona.devolver_ZonaConcurrida(fechaActual, horaActual);
+			    mapaContadorConcurrencias.put(zonaActual, mapaContadorConcurrencias.get(zonaActual) + 1);
+			}
+	        catch(ExcepcionPersonaSeFue e) {
+	    	    System.err.println(e.getMessage());
+	        }
+		return mapaContadorConcurrencias;
+		
+	}
+	
+	/**
 	 * Lista todas las zonas del Festival ordenadas descendentemente por la concurrencia actual.
 	 * @param fechaActual objeto de clase LocalDate, es la fecha actual.
 	 * @param horaActual objeto de clase LocalTime, es la hora actual.
@@ -166,15 +196,17 @@ public class Festival {
 	public static String lista_ZonasPorConcurrencia(LocalDate fechaActual, LocalTime horaActual) {
 		int cantTotalPersonas = 0;
 		StringBuilder mensaje = new StringBuilder();
-		/* Como los TreeMap ordenan por Key y no por valores, creamos y ordenamos una lista de Entrys. */
-		ArrayList<Map.Entry<Zona, Integer>> listaEntradasZonas = new ArrayList<>(mapaZonas.entrySet());
+		/* Para ir contando la concurrencia actual de cada zona en la hora ingresada, creamos un mapa para contarla. */
+		HashMap<Zona, Integer> mapaConcurrencias = devolverMapaConcurrencias(fechaActual, horaActual);
+		/* Para ordenar por valores, creamos y ordenamos una lista de Entrys. */
+		ArrayList<Map.Entry<Zona, Integer>> listaEntradasZonas = new ArrayList<>(mapaConcurrencias.entrySet());
 		listaEntradasZonas.sort(Map.Entry.<Zona, Integer>comparingByValue().reversed()); // Ordenamos cada entrada descendentemente (por eso lo revertimos) comparandolas según su concurrencia.
 		for(Map.Entry<Zona, Integer> entradaActual : listaEntradasZonas) {
 			/* Agregamos la cantidad de personas de la entradaActual a cantTotalPersonas, e imprimimos las zonas en orden descendente según su concurrencia. */
 			cantTotalPersonas += entradaActual.getValue();
-			mensaje.append(entradaActual.getKey().toString());
+			mensaje.append("\n" + entradaActual.getKey().toString());
 		}
-		mensaje.append("\nCANTIDAD TOTAL DE PERSONAS EN EL PREDIO = " + cantTotalPersonas);		
+		mensaje.append("\n\n\n\t\t\tCANTIDAD TOTAL DE PERSONAS EN EL PREDIO = " + cantTotalPersonas);		
 		return mensaje.toString();
 	}
 	
@@ -182,24 +214,28 @@ public class Festival {
 	 * Muestra una lista con todos los datos de los empleados de la instancia de Stand ingresada como parámetro. 
 	 * @param puesto objeto de clase Stand, es el Stand del cual se quieren mostrar los empleados y sus datos.
 	 */
-	public static void mostrar_EmpleadosStand(Stand puesto) {
+	public static String lista_EmpleadosStand(Stand puesto) {
+		StringBuilder mensaje = new StringBuilder();
 		String idResponsable = puesto.obtener_Responsable().obtenerID();
 		for(Personas personaActual : listaPersonas) {
 			/* Recorre la listaPersonas completa. */
 			if(personaActual instanceof Comerciantes) // Por cada persona que sea Comerciante...
 				if(((Comerciantes) personaActual).es_EmpleadoDe(idResponsable)) // ... pregunta si esa persona es empleado del puesto ingresado como parámetro...
-					System.out.println("* " + personaActual.toString()); // ... y si lo es, se imprimen sus datos.
+					mensaje.append("\n* " + ((Comerciantes)personaActual).toString()); // ... y si lo es, se agregan su nombre e ID al mensaje (usamos el toString de Comerciantes que redefine al de personas para evitar un bucle de recursión infinito).
 		}
+		return mensaje.toString();
 	}
 	
 	/**
 	 * Lista cada uno de los Stands y sus datos ascendentemente por orden alfabético de su código. 
 	 */
-	public static void listar_StandsAlfabeticamente() {  
+	public static String lista_StandsAlfabeticamente() {  
+		StringBuilder mensaje = new StringBuilder();
 		ArrayList<Stand> listaStands = devolver_listaStands();  
 		Collections.sort(listaStands);  /* Se ordena la lista Stands ascendentemente */
 		for(Stand standActual : listaStands) // Por cada stand se muestran sus datos completos.
-			standActual.mostrar();
+			mensaje.append(standActual.toString());
+		return mensaje.toString();
 	}
 
 	/** 
@@ -209,9 +245,9 @@ public class Festival {
 	 * @throws ExcepcionZonaNoExiste excepcion extendida de Exception, se lanza cuando no se encuentra la zona con ese código.
 	 */
     public static Zona buscarZonaPorID(String zonaID) throws ExcepcionZonaNoExiste {
-    	ArrayList<Zona> listaZonasAux = new ArrayList<>(mapaZonas.keySet());
-    	Iterator<Zona> iterador = listaZonasAux.iterator();
-    	Zona aux = listaZonasAux.getFirst();
+    	TreeSet<Zona> setZonasAux = new TreeSet<>(setZonas);
+    	Iterator<Zona> iterador = setZonasAux.iterator();
+    	Zona aux = setZonasAux.getFirst();
         while(iterador.hasNext() && !aux.getCodigoAlfanumerico().equals(zonaID))
         	aux = iterador.next();
         if(!aux.getCodigoAlfanumerico().equals(zonaID))
@@ -220,40 +256,49 @@ public class Festival {
         	return aux;
     }
 
-    public static int contarPersonasEnZona(Zona zona) {
-        int contador = 0;
-        for (Personas p : listaPersonas) {
-            if (p.obtenerListaZonas().contains(zona)) {
-                contador++;
+
+    public static boolean superaCapacidad(Zona zona, LocalDate fecha, LocalTime hora) {
+    	HashMap<Zona, Integer> mapaZonas = devolverMapaConcurrencias(fecha, hora);
+        try {
+        	if(zona instanceof ZonaRestringida)
+        		return mapaZonas.get(zona) >= ((ZonaRestringida) zona).getCapacidad_maxima();
+        	else
+        		return false;
+        }
+        catch(NullPointerException ePointer) {
+        	System.err.println("La zona cuya capacidad quiere comprobar si es superada no existe en el mapa de Zonas de Festival.");
+        	return true;
+        }
+    }
+
+    public static void modificarAcceso(String personaID, String zonaID, long minutos, LocalDate fecha, LocalTime hora)
+            throws ExcepcionAccesoIncorrecto {
+
+        Personas persona;
+        Zona zona;
+
+        try {
+        	persona = devolver_Persona(personaID);
+        	zona = buscarZonaPorID(zonaID);
+            boolean autorizado = false;
+            if (persona.puedeAcceder(zona)) {
+                autorizado = true;
+            }
+            persona.agregarAcceso(zona, fecha, hora, minutos, autorizado);
+            if (autorizado) {
+            	if(!superaCapacidad(zona,fecha,hora))
+                    System.out.println("Acceso AUTORIZADO a zona " + zonaID + " para persona " + personaID);
+            	else
+            		throw new ExcepcionAccesoIncorrecto("Acceso DENEGADO a zona " + zonaID + " para persona " + personaID + "\t(ZONA LLENA)");
+            } else {
+                throw new ExcepcionAccesoIncorrecto("Acceso DENEGADO a zona " + zonaID + " para persona " + personaID + "\t(NO ESTÁ AUTORIZADO)");
             }
         }
-        return contador;
-    }
-
-    public static boolean superaCapacidad(Zona zona) {
-        if (zona instanceof ZonaRestringida zonaRest) {
-            return contarPersonasEnZona(zonaRest) > zonaRest.getCapacidad_maxima();
+        catch(ExcepcionPersonaNoExiste eP) {
+        	throw new ExcepcionAccesoIncorrecto(eP.getMessage());
         }
-        return false;
-    }
-
-    public static void modificarAcceso(String personaID, String zonaID, long minutos)
-            throws ExcepcionPersonaNoExiste, ExcepcionZonaNoExiste {
-
-        Personas persona = devolver_Persona(personaID);
-        Zona zona = buscarZonaPorID(zonaID);
-        LocalDate fecha = LocalDate.now();
-        LocalTime hora = LocalTime.now();
-
-        boolean autorizado = false;
-        if (persona.puedeAcceder(zona) && !superaCapacidad(zona)) {
-            autorizado = true;
-        }
-        persona.agregarAcceso(zona, fecha, hora, minutos, autorizado);
-        if (autorizado) {
-            System.out.println("Acceso AUTORIZADO a zona " + zonaID + " para persona " + personaID);
-        } else {
-            System.out.println("Acceso DENEGADO a zona " + zonaID + " para persona " + personaID);
+        catch(ExcepcionZonaNoExiste eZ) {
+        	throw new ExcepcionAccesoIncorrecto(eZ.getMessage());
         }
     }
 
@@ -263,20 +308,21 @@ public class Festival {
         Personas persona = devolver_Persona(personaID);
         Zona zonaActual = buscarZonaPorID(zonaActualID);
         Zona zonaNueva = buscarZonaPorID(zonaNuevaID);
-
-        if (!persona.obtenerListaZonas().contains(zonaActual)) {
+        
+        if (!persona.obtenerSetZonas().contains(zonaActual)) {
             throw new IllegalArgumentException("La persona no tiene acceso a la zona especificada.");
         }
 
-        persona.obtenerListaZonas().remove(zonaActual);
-        persona.obtenerListaZonas().add(zonaNueva);
+        persona.obtenerSetZonas().remove(zonaActual);
+        persona.obtenerSetZonas().add(zonaNueva);
     }
 
     public static ArrayList<Personas> devolverListaPersonas() {
         return new ArrayList<>(listaPersonas); // Retorno copia defensiva
     }
 
-    public static ArrayList<Zona> devolverListaZonas() {
-        return new ArrayList<>(mapaZonas.keySet()); // Retorno copia defensiva
+    public static ArrayList<Zona> devolverSetZonas() {
+        return new ArrayList<>(setZonas); // Retorno copia defensiva
     }
+    
 }

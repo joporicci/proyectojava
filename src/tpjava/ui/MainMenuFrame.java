@@ -21,21 +21,21 @@ public class MainMenuFrame extends JFrame {
         setLayout(new GridLayout(9, 1, 10, 10));
 
         JButton btnCargarXML = new JButton("Cargar XML");
-        JButton btnVerZonas = new JButton("Ver Zonas");
-        JButton btnVerPersonas = new JButton("Ver Personas");
+        JButton btnVerZonas = new JButton("Listar Zonas según su concurrencia en una fecha y hora");
+        JButton btnVerStands = new JButton("Lista de Stands");
+        JButton btnVerPersonas = new JButton("Buscar datos de persona por ID");
         JButton btnAsignarZona = new JButton("Asignar Zona");
         JButton btnModificarAcceso = new JButton("Modificar Acceso");
-        JButton btnGenerarReporte = new JButton("Generar Reporte");
         JButton btnSalir = new JButton("Salir");
 
         add(btnCargarXML);
         add(btnVerZonas);
+        add(btnVerStands);
         add(btnVerPersonas);
-        add(btnAsignarZona);
         add(btnModificarAcceso);
-        add(btnGenerarReporte);
+        add(btnAsignarZona);
         add(btnSalir);
-
+        
         // Acciones
         btnCargarXML.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -67,10 +67,10 @@ public class MainMenuFrame extends JFrame {
             }
         });
 
-        btnGenerarReporte.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new VentanaModificarAcceso();
-            }
+        btnVerStands.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e) {
+        		new VentanaListaStands();
+        	}
         });
 
         btnSalir.addActionListener(e -> System.exit(0));

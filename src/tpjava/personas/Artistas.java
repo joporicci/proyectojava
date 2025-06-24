@@ -20,14 +20,15 @@ public class Artistas extends Personas{
 	public Artistas(String id, String name, ZonaRestringida... zonasRestr) {
 		super(id,name);
 		for(ZonaRestringida zonaActual : zonasRestr) 
-			obtenerListaZonas().add(zonaActual);
+			obtenerSetZonas().add(zonaActual);
 		try {
-		    obtenerListaZonas().add(Festival.devolver_Escenario(this));
+		    obtenerSetZonas().add(Festival.devolver_Escenario(this));
 		}
 		catch(ExcepcionEscenarioNoExiste e) {
 			System.err.println("No se encontro escenario alguno en el que el artista actue.");
 		}
 	}
+	
 	
 	/* El equals de la clase base se hereda automáticamente. */
 }

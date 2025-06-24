@@ -64,7 +64,7 @@ public class VentanaBuscarPorPersona extends JFrame {
             sb.append("Nombre: ").append(persona.obtenerID()).append("\n");
             sb.append("Zonas accesibles:\n");
 
-            for (Zona zona : persona.obtenerListaZonas()) {
+            for (Zona zona : persona.obtenerSetZonas()) {
                 sb.append("- ").append(zona.getCodigoAlfanumerico()).append(": ").append(zona.getDescripcion()).append("\n");
             }
 

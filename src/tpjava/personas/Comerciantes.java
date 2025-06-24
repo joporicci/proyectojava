@@ -25,10 +25,10 @@ public class Comerciantes extends Personas {  /* NUM: 3 */
 		IDJefe = idJefe;  // Se pone la ID del jefe y no una referencia a este debido a que presenta dificultades. */
 		
 		for(ZonaRestringida zona : zonasRestr) /* Añade las zonas restringidas determinadas. */
-	    	obtenerListaZonas().add((Zona)zona);
+	    	obtenerSetZonas().add((Zona)zona);
 		
 		try {
-		    obtenerListaZonas().add(Festival.devolver_Stand(IDJefe)); /* Añade el Stand correspondiente al jefe. */
+		    obtenerSetZonas().add(Festival.devolver_Stand(IDJefe)); /* Añade el Stand correspondiente al jefe. */
 		}
 		catch(ExcepcionStandNoExiste e) {
 			System.err.println("ERROR: Stand de comerciante no encontrado.");
@@ -37,7 +37,7 @@ public class Comerciantes extends Personas {  /* NUM: 3 */
 	}
 	
 	/**
-	 * Construye un objeto de clase Comerciantes, es el constructor alternativo por si no se suministra IDJefe.
+	 * Construye un objeto de clase Comerciantes, es el constructor alternativo por si no se suministra IDJefe, para crear un responsable auxiliar en el cargador xml.
 	 * @param id objeto de clase String, contiene el identificador del Comerciante.
 	 * @param name objeto de clase String, contiene el nombre del Comerciante.
 	 * @param zonasRestr zonasRestr varargs de clase ZonaRestringida, contiene las Zonas Restringidas a las que puede acceder el Comerciante.
@@ -48,7 +48,7 @@ public class Comerciantes extends Personas {  /* NUM: 3 */
 		IDJefe = id;  
 		
 		for(ZonaRestringida zona : zonasRestr) /* Añade las zonas restringidas determinadas. */
-	    	obtenerListaZonas().add((Zona)zona);
+	    	obtenerSetZonas().add((Zona)zona);
 
 	}
 	
@@ -63,7 +63,6 @@ public class Comerciantes extends Personas {  /* NUM: 3 */
 	}
 	
 	/* El equals de la clase base se hereda automáticamente. */
-	
 }
 
 

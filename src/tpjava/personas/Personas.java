@@ -1,9 +1,9 @@
 package tpjava.personas;
 
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.TreeSet;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import tpjava.zonas.Zona;
@@ -17,7 +17,7 @@ import tpjava.excepciones.ExcepcionPersonaSeFue;
 public class Personas{ // En la clase festival manejo las personas. Aca tengo datos indivuales y lista de zonas accesibles
 	private String ID, nombre;
 	private LinkedHashSet<Acceso> setAccesos;  /* set de Accesos ordenados por el orden de inserción, por lo que el último acceso es el más reciente. */
-	private ArrayList<Zona> listaZonasAccesibles;
+	private TreeSet<Zona> setZonasAccesibles;
 	
 	/**
 	 * Construye un objeto de clase Personas.
@@ -28,7 +28,7 @@ public class Personas{ // En la clase festival manejo las personas. Aca tengo da
 		ID = id;
 		nombre = name;
 		setAccesos = new LinkedHashSet<Acceso>();
-		listaZonasAccesibles = new ArrayList<Zona>(); 
+		setZonasAccesibles = new TreeSet<Zona>(); 
 		/* Las zonas comunes no se añaden porque es redundante, todos pueden acceder */
 	}
 	
@@ -36,8 +36,8 @@ public class Personas{ // En la clase festival manejo las personas. Aca tengo da
 	 * Devuelve una ArrayList con las Zonas accesibles para la Persona.
 	 * @return ArrayList<Zona> listaZonasAccesibles de la instancia de Personas
 	 */
-	public ArrayList<Zona> obtenerListaZonas(){
-		return listaZonasAccesibles;
+	public TreeSet<Zona> obtenerSetZonas(){
+		return setZonasAccesibles;
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class Personas{ // En la clase festival manejo las personas. Aca tengo da
 		/* Agrega un acceso al setAccesos de la Persona, inicializado con los parámetros ingresados. */
 		setAccesos.add(new Acceso(zona,fecha,hora,cantMins,estado));
 	}
-
+	
 	@Override
 	/**
 	 * Devuelve un valor boolean que indica si el objeto de clase Personas sobre el cual se trabaja es equivalente al objeto pasado como parametro.
@@ -94,7 +94,7 @@ public class Personas{ // En la clase festival manejo las personas. Aca tengo da
 	    	return true;
 
 	    
-	    for (Zona z : listaZonasAccesibles) {
+	    for (Zona z : setZonasAccesibles) {
 	        if (z.getCodigoAlfanumerico().equals(zona.getCodigoAlfanumerico())) {
 	            return true;
 	        }
@@ -105,20 +105,25 @@ public class Personas{ // En la clase festival manejo las personas. Aca tengo da
 	
 	@Override
 	/**
-	 * Devuelve todos los datos importantes de la instancia de Personas en un String.
-	 * @return objeto de clase String, datos importantes de Personas
+	 * Devuelve un String con los datos principales del artista.
+	 * @return objeto de clase String, contiene la ID y el nombre del artista.
 	 */
 	public String toString() {
+		return "ID: " + obtenerID() + "\tNOMBRE:" + obtenerNombre(); // Se reescribe un toString que devuelve menos datos a devolver_muestra para evitar un bucle de recursión infinita cuando se ejecute el listado de zonas.
+	}
+	
+	public String devolver_muestra() {
 		StringBuilder mensaje = new StringBuilder();
 		mensaje.append("\nID: " + ID + "\tNOMBRE: " + nombre + "\n\tLISTA DE ZONAS ACCESIBLES\n");
-		for(Zona zonaActual : listaZonasAccesibles) // Recorre la listaZonasAccesibles e imprime cada Zona de ésta.
+		for(Zona zonaActual : setZonasAccesibles) // Recorre la listaZonasAccesibles e imprime cada Zona de ésta.
 			mensaje.append(zonaActual.toString());
-		mensaje.append("\n\tLISTA DE ACCESOS\n");
+		mensaje.append("\n\n\tLISTA DE ACCESOS\n");
 		for(Acceso accesoActual : setAccesos) // Recorre el setAcceso e imprime cada Acceso de éste.
 			mensaje.append(accesoActual.toString());
 		return mensaje.toString();
 	}
 	
+
 	/**
 	 * Devuelve la zopa en la cual la persona se encuentra ahora mismo, si es que está en el festival.
 	 * @param fecha objeto de clase LocalDate, contiene la fecha actual.
@@ -128,11 +133,23 @@ public class Personas{ // En la clase festival manejo las personas. Aca tengo da
 	 */
 	public Zona devolver_ZonaConcurrida(LocalDate fecha, LocalTime hora) throws ExcepcionPersonaSeFue {
 		/* Devuelve la zona en la cual la Persona se encuentra actualmente (en la fecha & hora ingresados como parámetro), */
-		Acceso ultimoAcceso = setAccesos.getLast();
-		if(ultimoAcceso.es_enLaHora(fecha, hora)) /* Si el la fecha, hora y la cantMinutos de permanencia del ultimo Acceso en el setAccesos 
-		                                          * concuerdan con la fecha & hora actuales, devuelve la Zona de este Acceso .*/
-			return ultimoAcceso.obtener_Zona();
-		else // En cambio, si estos no concuerdan, lanza una ExcepcionPersonaSeFue, se asume que la persona ya no se encuentra en el Festival.
-			throw new ExcepcionPersonaSeFue("La ubicacion actual de la persona es indefinida.");
+		try {
+		    Acceso ultimoAcceso = setAccesos.getLast();
+		    if(ultimoAcceso.es_enLaHora(fecha, hora)) /* Si el la fecha, hora y la cantMinutos de permanencia del ultimo Acceso en el setAccesos concuerdan con la fecha & hora actuales, devuelve la Zona de este Acceso .*/
+			    return ultimoAcceso.obtener_Zona();
+		    else // En cambio, si estos no concuerdan, lanza una ExcepcionPersonaSeFue, se asume que la persona ya no se encuentra en el Festival.
+			    throw new ExcepcionPersonaSeFue("La ubicacion actual de la persona es indefinida (la cantidad de minutos de permanencia, fecha y hora de su último acceso indican que " + ID + " ya se fue del Festival).");
+		}
+		catch(NullPointerException e) {
+			throw new ExcepcionPersonaSeFue("La ubicacion actual de la persona es indefinida (su último acceso es nulo).");
+		}
+		catch(NoSuchElementException eElemento) {
+	    	throw new ExcepcionPersonaSeFue("La ubicacion actual de " + ID + " es indefinida (no tiene ningún acceso).");
+	    }
+	}
+	
+	@Override
+	public int hashCode() {
+		return ID.hashCode();
 	}
 }
