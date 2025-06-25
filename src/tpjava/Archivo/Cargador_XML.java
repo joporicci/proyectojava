@@ -111,8 +111,13 @@ public class Cargador_XML {
 		    		    errores.add(e.getMessage() + "Artista - indice " + i);
 		    	    }
 	    		   	for(HashMap.Entry<EventoMusical, Artistas> entradaAct : mapaEventosPendientes.entrySet())  // Recorremos el mapa de eventos pendientes y...
+	    		   		try {
 	    		   		if(entradaAct.getValue().equals(artistaAct)) // ... si encontramos una entrada valor.equals(artistaAct), entonces reemplazamos el artista del Evento Musical por artistaAct.
 	    		   			entradaAct.getKey().reemplazar_Artista(artistaAct);
+	    		   		}
+	    		   	    catch(NullPointerException e) {
+	    		   	    	errores.add("ERROR GRAVE: Puntero nulo en valor Artista de entrada de EventoMusical " + entradaAct.getKey().toString() + "\tERROR: " + e.getMessage());
+	    		   	    }
 		    	    Festival.agregar_Persona(artistaAct);	
 		    	}
 		    }

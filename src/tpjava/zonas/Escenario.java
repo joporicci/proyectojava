@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.TreeSet;
 
 /**
- * Clase que contiene los atributos y métodos necesarios para trabajar con todos los objetos de clase Escenario derivada de Zona.
+ * Clase que contiene los atributos y los métodos necesarios para trabajar con todos los objetos de clase Escenario derivada de Zona.
  * @author grupo2
  */
 public class Escenario extends Zona {

@@ -20,6 +20,16 @@
                 <idArtista>ART201</idArtista>
             </evento>
         </escenario>
+     <escenario>
+            <codigo>ESC003</codigo>
+            <descripcion>Escenario Secundario</descripcion>
+            <capacidad>3000</capacidad>
+            <evento>
+                <fecha>2023-10-01</fecha>
+                <hora>15:00</hora>
+                <idArtista>ART205</idArtista>
+            </evento>
+        </escenario>
     </escenarios>
 
     <comunes>
@@ -30,6 +40,14 @@
         <comun>
             <codigo>ZCOM002</codigo>
             <descripcion>Zona de Descanso</descripcion>
+        </comun>
+        <comun>
+            <codigo>ZCOM004</codigo>
+            <descripcion>Zona de Meet and Greet</descripcion>
+        </comun>
+        <comun>
+            <codigo>ZCOM005</codigo>
+            <descripcion>Tienda de Regalos</descripcion>
         </comun>
     </comunes>
 
@@ -42,6 +60,21 @@
         <restringida>
             <codigo>RES002</codigo>  
             <descripcion>Zona de Artistas</descripcion>
+            <capacidad>50</capacidad>
+        </restringida>
+        <restringida>
+            <codigo>RES003</codigo>  
+            <descripcion>Sauna 1</descripcion>
+            <capacidad>10</capacidad>
+        </restringida>
+        <restringida>
+            <codigo>RES004</codigo>  
+            <descripcion>Sauna 2</descripcion>
+            <capacidad>10</capacidad>
+        </restringida>
+        <restringida>
+            <codigo>RES038</codigo>  
+            <descripcion>Spá</descripcion>
             <capacidad>50</capacidad>
         </restringida>
     </restringidas>

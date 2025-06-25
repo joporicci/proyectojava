@@ -9,7 +9,7 @@ import tpjava.excepciones.ExcepcionStandNoExiste;
  * @author grupo2
  */
 public class Comerciantes extends Personas {  /* NUM: 3 */
-	private String IDJefe; // Se pone la ID del jefe y no una referencia a este debido a que presenta dificultades. */
+	private String IDJefe; // Se pone la ID del jefe y no una referencia a este debido a que presenta dificultades en la carga de archivos. */
 	/**
 	 * Construye un objeto de clase Comerciantes
 	 * En el caso de que el Comerciante SEA el jefe, el Comerciante es su propio jefe.

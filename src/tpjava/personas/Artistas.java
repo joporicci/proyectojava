@@ -25,7 +25,7 @@ public class Artistas extends Personas{
 		    obtenerSetZonas().add(Festival.devolver_Escenario(this));
 		}
 		catch(ExcepcionEscenarioNoExiste e) {
-			System.err.println("No se encontro escenario alguno en el que el artista actue.");
+			System.err.println("No se encontro escenario alguno en el que el artista actue. \tNOTA: ignorar si sucede en la carga de datos.");
 		}
 	}
 	

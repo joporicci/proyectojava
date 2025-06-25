@@ -6,13 +6,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Clase que constiene el constructor de la ventana MainMenuFrame y su atributo serialVersionUID. Esta ventana le permite al usuario elegir que acción quiere tomar.
+ */
 public class MainMenuFrame extends JFrame {
 
-    /**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construye una instancia de MainMenuFrame.
+	 */
 	public MainMenuFrame() {
         setTitle("Festival de Música - Menú Principal");
         setSize(400, 500);
@@ -24,7 +28,6 @@ public class MainMenuFrame extends JFrame {
         JButton btnVerZonas = new JButton("Listar Zonas según su concurrencia en una fecha y hora");
         JButton btnVerStands = new JButton("Lista de Stands");
         JButton btnVerPersonas = new JButton("Buscar datos de persona por ID");
-        JButton btnAsignarZona = new JButton("Asignar Zona");
         JButton btnModificarAcceso = new JButton("Modificar Acceso");
         JButton btnSalir = new JButton("Salir");
 
@@ -33,7 +36,6 @@ public class MainMenuFrame extends JFrame {
         add(btnVerStands);
         add(btnVerPersonas);
         add(btnModificarAcceso);
-        add(btnAsignarZona);
         add(btnSalir);
         
         // Acciones
@@ -55,12 +57,6 @@ public class MainMenuFrame extends JFrame {
             }
         });
 
-        btnAsignarZona.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new AgregarZonaFrame();
-            }
-        });
-
         btnModificarAcceso.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 new VentanaModificarAcceso();
@@ -76,10 +72,6 @@ public class MainMenuFrame extends JFrame {
         btnSalir.addActionListener(e -> System.exit(0));
 
         setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        new MainMenuFrame();
     }
 }
 

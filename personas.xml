@@ -10,6 +10,13 @@
                 <cantMins>120</cantMins>
                 <estado>true</estado>
             </acceso>
+            <acceso>
+                <idZona>ESC001</idZona>
+                <fecha>2023-10-01</fecha>
+                <hora>14:00</hora>
+                <cantMins>60</cantMins>
+                <estado>true</estado>
+            </acceso>
         </asistente>
     </asistentes>
 
@@ -20,8 +27,30 @@
             <zonaR>
                 <id>RES002</id>
             </zonaR>
+            <acceso>
+                <idZona>ESC001</idZona>
+                <fecha>2023-10-01</fecha>
+                <hora>13:00</hora>
+                <cantMins>180</cantMins>
+                <estado>true</estado>
+            </acceso>
+        </artista>
+        <artista>
+            <id>ART205</id>
+            <nombre>Charly Garcia</nombre>
+            <zonaR>
+                <id>RES002</id>
+            </zonaR>
+        </artista>
+        <artista>
+            <id>ART239</id>
+            <nombre>Andrés Calamaro</nombre>
+            <zonaR>
+                <id>RES002</id>
+            </zonaR>
         </artista>
     </artistas>
+
 
     <comerciantes>
         <comerciante>
@@ -50,12 +79,25 @@
                 <id>RES001</id> 
             </zonaR>
         </comerciante>
+
+        <comerciante>
+            <id>COM109</id>
+            <nombre>Julio Buratti</nombre>
+            <idJefe>COM102</idJefe>
+            <zonaR>
+                <id>RES001</id> 
+            </zonaR>
+        </comerciante>
     </comerciantes>
 
     <staffs>
         <staff>
             <id>STA001</id>
             <nombre>Carlos Gómez</nombre>
+        </staff>
+        <staff>
+            <id>STA002</id>
+            <nombre>Joaquín Fernandez</nombre>
         </staff>
     </staffs>
 </personas>

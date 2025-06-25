@@ -13,6 +13,10 @@ import tpjava.excepciones.*;
 
 import java.util.ArrayList;
 
+/**
+ * Clase que contiene los atributos, el constructor y los métodos que este requiere de VentanaModificarAcceso. Ésta debe permitirle al usuario agregarle un nuevo acceso a una persona en el festival ingresando de que zona
+ * quiere moverlo hasta cual, la cantidad de minutos de permanencia en la zona, y la fecha y la hora en la que ocure el mismo.
+ */
 public class VentanaModificarAcceso extends JFrame {
     private JTextField campoID, campoMinutos, campoFecha, campoHora;
     private JComboBox<String> comboZonaActual;
@@ -20,7 +24,11 @@ public class VentanaModificarAcceso extends JFrame {
     private JButton botonBuscar, botonModificar, botonCerrar;
     JPanel panelZonas;
     private Personas personaActual;
+    String id;
 
+    /**
+     * Construye una intancia de VentanaModificarAcceso.
+     */
     public VentanaModificarAcceso() {
         super("Modificar Acceso de Persona");
         setLayout(new BorderLayout());
@@ -78,8 +86,11 @@ public class VentanaModificarAcceso extends JFrame {
         panelZonas.setVisible(false);
     }
 
+    /**
+     * Busca la persona del ID ingresado y habilita los selectores de la zona anterior, la zona nueva, la cantidad de minutos, la fecha y la hora, ademas del botón para proseguir después de ingresar los datos.
+     */
     private void cargarPersona() {
-        String id = campoID.getText().trim();
+        id = campoID.getText().trim();
         if (id == null || id.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese un ID de persona", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -105,6 +116,9 @@ public class VentanaModificarAcceso extends JFrame {
         }
     }
 
+    /**
+     * Agrega un nuevo acceso a la lista de accesos de la persona con los datos ingresados por el usuario. Se agrega aunque no esté autorizado o la Zona esté llena para tener la trazabilidad de cada persona.
+     */
     private void modificarAcceso() {
         if (personaActual == null) {
             JOptionPane.showMessageDialog(this, "Primero debe buscar una persona.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -121,10 +135,16 @@ public class VentanaModificarAcceso extends JFrame {
         }
 
         try {
-            Festival.modificarAcceso(personaActual.obtenerID(), zonaNueva, cantMinutos, LocalDate.parse(campoFecha.getText()), LocalTime.parse(campoHora.getText()));
+            Festival.modificarAcceso(Festival.devolver_Persona(id), Festival.buscarZonaPorID(zonaNueva), cantMinutos, LocalDate.parse(campoFecha.getText()), LocalTime.parse(campoHora.getText()));
             JOptionPane.showMessageDialog(this, "Acceso modificado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } catch (ExcepcionAccesoIncorrecto ex) {
-            JOptionPane.showMessageDialog(this, "Error al modificar acceso: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            
+        }
+        catch(ExcepcionPersonaNoExiste eP) {
+        	JOptionPane.showMessageDialog(this, "Error al modificar acceso: " + eP.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);;
+        }
+        catch(ExcepcionZonaNoExiste eZ) {
+        	JOptionPane.showMessageDialog(this, "Error al modificar acceso: " + eZ.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);;
         }
     }
 }

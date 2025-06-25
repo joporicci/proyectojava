@@ -7,6 +7,9 @@ import java.awt.event.ActionListener;
 
 import tpjava.Archivo.Cargador_XML;
 
+/**
+ * Clase que contiene el constructor, un método que este requiere y los atributos de VentanaCargarXml para que permita al usuario cargar los datos del archivo XML. 
+ */
 public class VentanaCargarXml extends JFrame {
 
    
@@ -14,8 +17,10 @@ public class VentanaCargarXml extends JFrame {
 	private JButton botonCerrar;
     private JTextArea areaMensajes;
 
+    /**
+     * Construye una instancia de VentanaCargarXml.
+     */
     public VentanaCargarXml() {
-    	// Constructor de la pantalla con datos de titulo, tamaños, locaciones forma de cerrar la ventana. *ESTO SE REPITE EN TODAS LAS PANTALLAS CON DISTINTOS FORMATOS Y TEXTOS
         setTitle("Cargar archivo XML");
         setSize(500, 200);
         setLocationRelativeTo(null);
@@ -44,7 +49,9 @@ public class VentanaCargarXml extends JFrame {
         cargarXML();
     }
     
-    // genero una instancia del cargador del xml y le paso la ruta. Una vez finalizado el proces, devuelvo un mensaje 
+    /**
+     * Invoca métodos del Cargador_XML y devuelve mensajes de proceso, éxito, errores...
+     */
     private void cargarXML() {
         areaMensajes.setText("Cargando archivo...\n");
         Cargador_XML.cargar_Todo();

@@ -1,9 +1,10 @@
 package tpjava.personas;
 
-
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.TreeSet;
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import tpjava.zonas.Zona;
@@ -134,11 +135,22 @@ public class Personas{ // En la clase festival manejo las personas. Aca tengo da
 	public Zona devolver_ZonaConcurrida(LocalDate fecha, LocalTime hora) throws ExcepcionPersonaSeFue {
 		/* Devuelve la zona en la cual la Persona se encuentra actualmente (en la fecha & hora ingresados como parámetro), */
 		try {
-		    Acceso ultimoAcceso = setAccesos.getLast();
-		    if(ultimoAcceso.es_enLaHora(fecha, hora)) /* Si el la fecha, hora y la cantMinutos de permanencia del ultimo Acceso en el setAccesos concuerdan con la fecha & hora actuales, devuelve la Zona de este Acceso .*/
-			    return ultimoAcceso.obtener_Zona();
+			ArrayList<Acceso> listaAux = new ArrayList<>();
+		    Iterator<Acceso> iterador;
+		    Acceso aux;
+		    boolean seEncontro = false;
+		    listaAux.addAll(setAccesos.reversed()); // La lista auxiliar copia todos los accesos del setAccesos en el orden opuesto asi los leemos desde los más recientes hasta los más viejos.
+            iterador = listaAux.iterator();
+            aux = listaAux.getFirst();
+		    while(iterador.hasNext() && !seEncontro)
+		        if(aux.es_enLaHora(fecha, hora)) 
+			        seEncontro = true;
+		        else 
+		        	aux = iterador.next();
+		    if(!seEncontro && !aux.es_enLaHora(fecha, hora)) /* Si el la fecha, hora y la cantMinutos de permanencia del ultimo Acceso en el setAccesos concuerdan con la fecha & hora actuales, devuelve la Zona de este Acceso .*/
+		    	throw new ExcepcionPersonaSeFue("La ubicacion actual de la persona es indefinida (la cantidad de minutos de permanencia, fecha y hora de su último acceso indican que " + ID + " no está en el Festival en esta hora).");
 		    else // En cambio, si estos no concuerdan, lanza una ExcepcionPersonaSeFue, se asume que la persona ya no se encuentra en el Festival.
-			    throw new ExcepcionPersonaSeFue("La ubicacion actual de la persona es indefinida (la cantidad de minutos de permanencia, fecha y hora de su último acceso indican que " + ID + " ya se fue del Festival).");
+		    	return aux.obtener_Zona();
 		}
 		catch(NullPointerException e) {
 			throw new ExcepcionPersonaSeFue("La ubicacion actual de la persona es indefinida (su último acceso es nulo).");

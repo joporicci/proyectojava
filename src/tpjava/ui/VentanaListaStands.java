@@ -7,12 +7,18 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import tpjava.zonas.*;
 
+/**
+ * Clase que contiene los atributos, el constructor y un método que el mismo usa para operar con VentanaListaStands. Esta debe permitirle al usuario recibir una lista de todos los Stands y sus datos completos ordenados alfabeticamente
+ * por el nombre del comerciante responsable.
+ */
 public class VentanaListaStands extends JFrame {
 	 
 	private static final long serialVersionUID = 1L;
 	private JTextArea areaTexto;
     
-	// Constructor texto de titulo, tamaños, locacion y construccion del area de texto con editable en false. Una vez creada la pantalla se llama a la funcion que muestra las zonas
+	/*
+	 * Construye una instancia de VentanaListaStands.
+	 */
     public VentanaListaStands() {
     	JPanel panelEntrada = new JPanel();
     	panelEntrada.setLayout(new FlowLayout());
@@ -35,6 +41,9 @@ public class VentanaListaStands extends JFrame {
         mostrarStands();
     }
 
+    /**
+     * Recibe de Festival una cadena con la lista de Stands antes mencionada y la muestra en pantalla en la ventana. Si no la recibe, muestra un error en pantalla.
+     */
     private void mostrarStands() {
         try {
             areaTexto.setText(Festival.lista_StandsAlfabeticamente());

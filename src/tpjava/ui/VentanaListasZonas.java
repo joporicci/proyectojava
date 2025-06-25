@@ -7,13 +7,19 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import tpjava.zonas.*;
 
+/**
+ * Clase que contiene los atributos, el constructor y un método que este necesita para construir VentanaListasZonas. Esta debe permitirle al usuario recibir una lista de zonas ordenadas descendentemente por su concurrencia
+ * actual (desarrollado de manera que la comprobación se hace con la fecha y hora que da el usuario).
+ */
 public class VentanaListasZonas extends JFrame {
 	 
 	private static final long serialVersionUID = 1L;
 	private JTextArea areaTexto;
 	private JTextField campoFecha, campoHora;
     
-	// Constructor texto de titulo, tamaños, locacion y construccion del area de texto con editable en false. Una vez creada la pantalla se llama a la funcion que muestra las zonas
+	/**
+	 * Construye una instancia de VentanaListasZonas.
+	 */
     public VentanaListasZonas() {
     	JPanel panelEntrada = new JPanel();
     	panelEntrada.setLayout(new FlowLayout());
@@ -47,6 +53,11 @@ public class VentanaListasZonas extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Muestra las zonas en el campo de texto de un panel de la ventana si es que cargaron correctamente. Si no, muestra un error en pantalla.
+     * @param fecha
+     * @param hora
+     */
     private void mostrarZonas(LocalDate fecha, LocalTime hora) {
         try {
             areaTexto.setText(Festival.lista_ZonasPorConcurrencia(fecha,hora));

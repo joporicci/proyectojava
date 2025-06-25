@@ -247,16 +247,28 @@ public class Festival {
     public static Zona buscarZonaPorID(String zonaID) throws ExcepcionZonaNoExiste {
     	TreeSet<Zona> setZonasAux = new TreeSet<>(setZonas);
     	Iterator<Zona> iterador = setZonasAux.iterator();
-    	Zona aux = setZonasAux.getFirst();
-        while(iterador.hasNext() && !aux.getCodigoAlfanumerico().equals(zonaID))
-        	aux = iterador.next();
-        if(!aux.getCodigoAlfanumerico().equals(zonaID))
-            throw new ExcepcionZonaNoExiste("ID de zona no registrado: " + zonaID);
-        else
-        	return aux;
+    	try {
+    	    Zona aux = setZonasAux.getFirst();
+            while(iterador.hasNext() && !aux.getCodigoAlfanumerico().equals(zonaID))
+        	    aux = iterador.next();
+            if(!aux.getCodigoAlfanumerico().equals(zonaID))
+                throw new ExcepcionZonaNoExiste("ID de zona no registrado: " + zonaID);
+            else
+        	    return aux;
+    	}
+    	catch(NoSuchElementException e) {
+    		throw new ExcepcionZonaNoExiste("El set de zonas se encuentra vacío.");
+    	}
     }
 
 
+    /**
+     * Método que devuelve un valor boolean que indica si una zona está a su capacidad máxima.
+     * @param zona objeto de clase Zona, es la zona a la que se le está consultando si recibe más personas.
+     * @param fecha objeto de clase LocalDate, es la fecha en la que se hace la consulta.
+     * @param hora objeto de clase LocalTime, es la hora en la que se hace la consulta.
+     * @return valor de tipo primitivo boolean, true (si la zona ya no acepta más personas por su capacidad, o si no se sabe) o false (en el caso contrario). 
+     */
     public static boolean superaCapacidad(Zona zona, LocalDate fecha, LocalTime hora) {
     	HashMap<Zona, Integer> mapaZonas = devolverMapaConcurrencias(fecha, hora);
         try {
@@ -271,50 +283,30 @@ public class Festival {
         }
     }
 
-    public static void modificarAcceso(String personaID, String zonaID, long minutos, LocalDate fecha, LocalTime hora)
+    /**
+     * Método que permite agregar el acceso de una persona a una zona.
+     * @param persona objeto de clase Personas, contiene la persona sujeto del nuevo acceso.
+     * @param zona objeto de la clase Zona, contiene la zona a la que la persona intenta acceder.
+     * @param minutos variable de tipo primitivo long, es la cantidad de minutos de permanencia de la persona en la zona.
+     * @param fecha objeto de clase LocalDate, es la fecha del nuevo acceso.
+     * @param hora objeto de clase LocalTime, es la hora del nuevo acceso.
+     * @throws ExcepcionAccesoIncorrecto excepcion extendida de Exception, se lanza cuando el acceso es denegado, la persona no existe en listaPersonas, o la zona no existe en setZonas.
+     */
+    public static void modificarAcceso(Personas persona, Zona zona, long minutos, LocalDate fecha, LocalTime hora)
             throws ExcepcionAccesoIncorrecto {
-
-        Personas persona;
-        Zona zona;
-
-        try {
-        	persona = devolver_Persona(personaID);
-        	zona = buscarZonaPorID(zonaID);
-            boolean autorizado = false;
-            if (persona.puedeAcceder(zona)) {
-                autorizado = true;
-            }
-            persona.agregarAcceso(zona, fecha, hora, minutos, autorizado);
-            if (autorizado) {
-            	if(!superaCapacidad(zona,fecha,hora))
-                    System.out.println("Acceso AUTORIZADO a zona " + zonaID + " para persona " + personaID);
-            	else
-            		throw new ExcepcionAccesoIncorrecto("Acceso DENEGADO a zona " + zonaID + " para persona " + personaID + "\t(ZONA LLENA)");
-            } else {
-                throw new ExcepcionAccesoIncorrecto("Acceso DENEGADO a zona " + zonaID + " para persona " + personaID + "\t(NO ESTÁ AUTORIZADO)");
-            }
+        boolean autorizado = false;
+        if (persona.puedeAcceder(zona)) {
+            autorizado = true;
         }
-        catch(ExcepcionPersonaNoExiste eP) {
-        	throw new ExcepcionAccesoIncorrecto(eP.getMessage());
+        persona.agregarAcceso(zona, fecha, hora, minutos, autorizado);
+        if (autorizado) {
+          	if(!superaCapacidad(zona,fecha,hora))
+                System.out.println("Acceso AUTORIZADO a zona " + zona.toString() + " para persona " + persona.toString());
+          	else
+         		throw new ExcepcionAccesoIncorrecto("Acceso DENEGADO a zona " + zona.toString() + " para persona " + persona.toString() + "\t(ZONA LLENA)");
+        } else {
+            throw new ExcepcionAccesoIncorrecto("Acceso DENEGADO a zona " + zona.toString() + " para persona " + persona.toString() + "\t(NO ESTÁ AUTORIZADO)");
         }
-        catch(ExcepcionZonaNoExiste eZ) {
-        	throw new ExcepcionAccesoIncorrecto(eZ.getMessage());
-        }
-    }
-
-    public static void modificarZonaAccesible(String personaID, String zonaActualID, String zonaNuevaID)
-            throws ExcepcionPersonaNoExiste, ExcepcionZonaNoExiste {
-
-        Personas persona = devolver_Persona(personaID);
-        Zona zonaActual = buscarZonaPorID(zonaActualID);
-        Zona zonaNueva = buscarZonaPorID(zonaNuevaID);
-        
-        if (!persona.obtenerSetZonas().contains(zonaActual)) {
-            throw new IllegalArgumentException("La persona no tiene acceso a la zona especificada.");
-        }
-
-        persona.obtenerSetZonas().remove(zonaActual);
-        persona.obtenerSetZonas().add(zonaNueva);
     }
 
     public static ArrayList<Personas> devolverListaPersonas() {
